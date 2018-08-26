@@ -1,0 +1,21 @@
+{
+  "name": "meal-planner",
+  "version": "1.0.0",
+  "description": "A webapp that allows you to plan meals for a week, make shopping lists, and look up recipes.",
+  "main": "App.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giagnus64/Meal-Planner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giagnus64/Meal-Planner/issues"
+  },
+  "homepage": "https://github.com/Giagnus64/Meal-Planner#readme"
+}
