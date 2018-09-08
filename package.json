@@ -1,19 +1,44 @@
 {
   "name": "meal-planner",
   "version": "1.0.0",
-  "description": "A webapp that allows you to plan meals for a week, make shopping lists, and look up recipes.",
-  "main": "App.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "description": "A site that helps you split the bill",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server --output-public-path=/build/",
+    "postcss": "postcss assets/styles/main.css --dir build/styles -w",
+    "browsersync": "browser-sync -w",
+    "copy-build": "cp -R build docs",
+    "copy-images": "cp -R assets/images docs/assets",
+    "copy-html": "cp index.html docs",
+    "copy-all": "npm run copy-build && npm run copy-images && npm run copy-html"
+  },
+  "author": "Gianfranco Nuschese",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^8.5.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "postcss-cli": "^5.0.0",
+    "postcss-import": "^11.1.0",
+    "postcss-mixins": "^6.2.0",
+    "postcss-simple-vars": "^4.1.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "dependencies": {
+    "browser-sync": "^2.24.4",
+    "normalize.css": "^8.0.0",
+    "postcss-nested": "^3.0.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Giagnus64/Meal-Planner.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Giagnus64/Meal-Planner/issues"
   },
