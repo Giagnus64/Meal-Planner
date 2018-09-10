@@ -1,47 +1,8 @@
-.header{
-	background-color:#78C2AD;
-	display:flex;
-	justify-content:center;
-	align-items:center;
-	padding-top:15px;
-	padding-bottom:10px;
-	margin-bottom:15px;
-}
-
-.navbar-brand{
-	font-size:32px;
-}
-
-.date-input{
-	margin-right:10px;
-}
-
-.navbar-light .navbar-toggler{
-	border-color:rgba(0,0,0,0.3);
-}
-
-@media(max-width: 575.98px){
-	.date-input{
-		margin-right:0;
-		margin-bottom:10px;
-	}
-	
-}
-
-html, body{
-	box-sizing:border-box;
-	min-height:100%;
-	margin:0;
-	padding:0;
-	max-width:100%;
-}
-
 .col-md-auto{
 	padding:0;	
 	flex-grow:1;
 	max-width:330px;
 }
-
 .flex-body .d-flex{
 	flex-wrap:nowrap;
 }
@@ -91,7 +52,6 @@ html, body{
 		flex-shrink:1;
 	}
 }
-
 @media(min-width:701px) and (max-width:1000px){
 	.shopping-list{
 		flex-shrink:2;
