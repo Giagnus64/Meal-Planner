@@ -9050,6 +9050,10 @@ module.exports = function (regExp, replace) {
 
 var _recipe = __webpack_require__(329);
 
+var results = _recipe.recipe.searchRecipesByTerm();
+//Not working asynchronously
+//console.log(results, "3");
+
 /***/ }),
 /* 329 */
 /***/ (function(module, exports, __webpack_require__) {
