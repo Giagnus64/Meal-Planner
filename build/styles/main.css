@@ -1,3 +1,16 @@
+html, body{
+	box-sizing:border-box;
+	min-height:100%;
+	margin:0;
+	padding:0;
+	max-width:100%;
+}
+
+a.btn, button.btn{
+	color:rgb(100,100,100);
+/*	border-color:rgb(100,100,100);*/
+}
+
 .header{
 	background-color:#78C2AD;
 	display:flex;
@@ -10,6 +23,11 @@
 
 .navbar-brand{
 	font-size:32px;
+
+}
+
+#logo-color{
+	color:white;
 }
 
 .date-input{
@@ -28,15 +46,7 @@
 	
 }
 
-html, body{
-	box-sizing:border-box;
-	min-height:100%;
-	margin:0;
-	padding:0;
-	max-width:100%;
-}
-
-.col-md-auto{
+.card-column{
 	padding:0;	
 	flex-grow:1;
 	max-width:330px;
@@ -46,9 +56,28 @@ html, body{
 	flex-wrap:nowrap;
 }
 
-.card-container{
+.card-container-all{
 	margin-left:10px;
 	margin-right:10px;
+}
+
+@media(max-width: 575.98px){
+	.flex-body {
+		flex-wrap:wrap;
+	}
+
+	.card-container-all{
+		order:1;
+		margin-left:15px;
+		margin-right:15px;
+	}
+	.card-day{
+		margin-bottom:10px;
+	}
+}
+
+.card-recipe-container{
+	
 }
 
 .search-recipe-submit{
@@ -60,29 +89,16 @@ html, body{
 .shopping-list{
 	flex-shrink:3;
 	border-left:2px dotted black;
-	min-height:700px;
-	
+	min-height:700px;	
 }
 
 @media(max-width: 575.98px){
-	.flex-body {
-		flex-wrap:wrap;
-	}
-
 	.shopping-list{
 		order:0;
 		margin-bottom:15px;
 		border:none;
 		min-height:auto;
 
-	}
-	.card-container{
-		order:1;
-		margin-left:15px;
-		margin-right:15px;
-	}
-	.card-day{
-		margin-bottom:10px;
 	}
 }
 

@@ -1,0 +1,26 @@
+.shopping-list{
+	flex-shrink:3;
+	border-left:2px dotted black;
+	min-height:700px;	
+}
+
+@media(max-width: 575.98px){
+	.shopping-list{
+		order:0;
+		margin-bottom:15px;
+		border:none;
+		min-height:auto;
+
+	}
+}
+
+@media(min-width:576px) and (max-width:700px){
+	.shopping-list{
+		flex-shrink:1;
+	}
+}
+@media(min-width:701px) and (max-width:1000px){
+	.shopping-list{
+		flex-shrink:2;
+	}
+}
