@@ -6,6 +6,44 @@ import {shoppingList} from "./shoppingList.js";
 //Event Listeners
 document.querySelector(".shopping-list").addEventListener("click", clearListItems);
 document.querySelector(".add-shopping-list").addEventListener("click", queryListItem);
+document.querySelector(".date-input").addEventListener("click", getDateInput);
+
+//Default Behavior/HTML Generation
+// let today = new Date();
+// getWeekArray(today);
+
+// *** Date Functions ***
+function getDateInput(){
+	//VERIFY?!
+	let date = prompt("Enter Start Date as mm/dd");
+	let dateArray = date.split("/");
+	let startDate = new Date();
+	startDate.setMonth(dateArray[0]);
+	startDate.setDate(dateArray[1]);
+	getWeekArray(startDate);
+	// test
+	//console.log(dateArray, startDate);
+}
+
+//enter start date, default is today, based on user input
+function getWeekArray(startDate){
+	//make array to generate html with
+	const dateArray = [];
+	//establish start date  day number to reset date after each iteration
+	const startDateDay = startDate.getDate();
+	//add 6 days to start date
+	for(let i=0; i<7; i++){
+		startDate.setDate(startDate.getDate() + i);
+		let day = startDate.getDate();
+		let month = startDate.getMonth();
+		// date date string to array
+		dateArray.push(month + "/"+ day);
+		startDate.setDate(startDateDay);
+		//test
+		//console.log(dateArray, startDateDay);
+	}
+}
+//*****
 
 //*** Shopping List Functions ***
 //checks for items to clear by button clicked
@@ -28,9 +66,9 @@ function queryListItem(){
 	let itemList = items.split(',');
 	shoppingList.addItems(itemList);
 }
-
 // // test item input
 // shoppingList.addItem([" 2 lbs of Chicken", " 1 can of Red Beans"]);
+//*** End Shopping List***
 
 
 
