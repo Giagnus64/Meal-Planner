@@ -5,12 +5,6 @@ html, body{
 	padding:0;
 	max-width:100%;
 }
-
-a.btn, button.btn{
-	color:rgb(100,100,100);
-/*	border-color:rgb(100,100,100);*/
-}
-
 .header{
 	background-color:#78C2AD;
 	display:flex;
@@ -20,24 +14,19 @@ a.btn, button.btn{
 	padding-bottom:10px;
 	margin-bottom:15px;
 }
-
 .navbar-brand{
 	font-size:32px;
 
 }
-
 #logo-color{
 	color:white;
 }
-
 .date-input{
 	margin-right:10px;
 }
-
 .navbar-light .navbar-toggler{
 	border-color:rgba(0,0,0,0.3);
 }
-
 @media(max-width: 575.98px){
 	.date-input{
 		margin-right:0;
@@ -45,22 +34,39 @@ a.btn, button.btn{
 	}
 	
 }
-
-.card-column{
-	padding:0;	
-	flex-grow:1;
-	max-width:330px;
+button.btn:not(.btn-outline-primary, .btn-outline-info){
+	color:rgb(100,100,100);
+	border-color:rgb(150,150,150);
 }
+button.btn:not(.btn-outline-primary, .btn-outline-info):hover{
+	color:white;
+}
+button.btn.btn-secondary, button.btn.search-recipe-submit{
+	color:white;
+}
+button.btn.disabled{
+	color:red;
+}
+.card-column{
+	flex-grow:1;
+	min-width:288px;
+	max-width:328px;
 
+}
 .flex-body .d-flex{
 	flex-wrap:nowrap;
 }
-
 .card-container-all{
 	margin-left:10px;
 	margin-right:10px;
 }
-
+.card-day-edit:hover{
+	color:white;
+}
+/*.card-day-edit{
+	display:block;
+	margin-left:auto;
+}*/
 @media(max-width: 575.98px){
 	.flex-body {
 		flex-wrap:wrap;
@@ -75,23 +81,19 @@ a.btn, button.btn{
 		margin-bottom:10px;
 	}
 }
-
 .card-recipe-container{
 	
 }
-
 .search-recipe-submit{
 	font-size:22px;
 	width:auto;
 	display:block;
 }
-
 .shopping-list{
 	flex-shrink:3;
 	border-left:2px dotted black;
 	min-height:700px;	
 }
-
 @media(max-width: 575.98px){
 	.shopping-list{
 		order:0;
@@ -101,13 +103,11 @@ a.btn, button.btn{
 
 	}
 }
-
 @media(min-width:576px) and (max-width:700px){
 	.shopping-list{
 		flex-shrink:1;
 	}
 }
-
 @media(min-width:701px) and (max-width:1000px){
 	.shopping-list{
 		flex-shrink:2;

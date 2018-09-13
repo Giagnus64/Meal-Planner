@@ -1,7 +1,8 @@
 .card-column{
-	padding:0;	
 	flex-grow:1;
-	max-width:330px;
+	min-width:288px;
+	max-width:328px;
+
 }
 .flex-body .d-flex{
 	flex-wrap:nowrap;
@@ -11,6 +12,14 @@
 	margin-left:10px;
 	margin-right:10px;
 }
+
+.card-day-edit:hover{
+	color:white;
+}
+/*.card-day-edit{
+	display:block;
+	margin-left:auto;
+}*/
 
 @media(max-width: 575.98px){
 	.flex-body {
@@ -26,3 +35,4 @@
 		margin-bottom:10px;
 	}
 }
+

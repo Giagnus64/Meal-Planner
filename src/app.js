@@ -1,5 +1,6 @@
 //import {recipe} from "./recipe.js";
 import {shoppingList} from "./shoppingList.js";
+import {ui} from "./ui.js";
 
 //Variables
 
@@ -7,20 +8,28 @@ import {shoppingList} from "./shoppingList.js";
 document.querySelector(".shopping-list").addEventListener("click", clearListItems);
 document.querySelector(".add-shopping-list").addEventListener("click", queryListItem);
 document.querySelector(".date-input").addEventListener("click", getDateInput);
+document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
 
 //Default Behavior/HTML Generation
-// let today = new Date();
-// getWeekArray(today);
+  let today = new Date();
+  let dateArray = getWeekArray(today);
+  ui.generateDayCards(dateArray);
 
 // *** Date Functions ***
 function getDateInput(){
 	//VERIFY?!
+	//prompt for start date
 	let date = prompt("Enter Start Date as mm/dd");
+	// split input into array
 	let dateArray = date.split("/");
+	//make a new date object
 	let startDate = new Date();
-	startDate.setMonth(dateArray[0]);
+	//set month (adding 1 due to month array starting at 0)
+	startDate.setMonth(dateArray[0] - 1);
 	startDate.setDate(dateArray[1]);
-	getWeekArray(startDate);
+	let userDate = getWeekArray(startDate);
+	ui.generateDayCards(userDate);
+	
 	// test
 	//console.log(dateArray, startDate);
 }
@@ -29,21 +38,35 @@ function getDateInput(){
 function getWeekArray(startDate){
 	//make array to generate html with
 	const dateArray = [];
-	//establish start date  day number to reset date after each iteration
-	const startDateDay = startDate.getDate();
-	//add 6 days to start date
-	for(let i=0; i<7; i++){
-		startDate.setDate(startDate.getDate() + i);
+	//push initial date to Array
+	let firstDay = startDate.getDate();
+	let firstMonth = startDate.getMonth();
+	// push date string to array (adding 1 to fix for month array)
+	dateArray.push((firstMonth + 1) + "/"+ firstDay);
+	//push next 6 days to array
+	for(let i=0; i<6; i++){
+		startDate.setDate(startDate.getDate() + 1)//** change this;
 		let day = startDate.getDate();
 		let month = startDate.getMonth();
-		// date date string to array
-		dateArray.push(month + "/"+ day);
-		startDate.setDate(startDateDay);
+		// push date string to array( adding 1 to fix for month array)
+		dateArray.push((month + 1) + "/"+ day);
 		//test
-		//console.log(dateArray, startDateDay);
+		//console.log(dateArray, startDate);
+	}
+	return dateArray;
+}
+
+//*****
+
+//Day-Card Functions
+function dayCardEdit(e){
+	if (e.target.classList.contains("card-day-edit")){
+		ui.editState(e);
+	} else if(e.target.classList.contains("card-day-save")){
+		ui.saveEdits(e);
 	}
 }
-//*****
+
 
 //*** Shopping List Functions ***
 //checks for items to clear by button clicked

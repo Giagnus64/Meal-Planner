@@ -1,0 +1,15 @@
+button.btn:not(.btn-outline-primary, .btn-outline-info){
+	color:rgb(100,100,100);
+	border-color:rgb(150,150,150);
+}
+button.btn:not(.btn-outline-primary, .btn-outline-info):hover{
+	color:white;
+}
+
+button.btn.btn-secondary, button.btn.search-recipe-submit{
+	color:white;
+}
+
+button.btn.disabled{
+	color:red;
+}
