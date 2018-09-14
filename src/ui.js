@@ -118,7 +118,7 @@ class UI{
 		//validatesURL's entered and throws error if not valid	
 		let linksValid = true;
 		linkArray.forEach(link =>{
-			if(link.value !== ''){
+			if(link.value !== '' && link.value !== 'Recipe Link'){
 				if((!this.is_url(link.value))){
 					link.classList.add("is-invalid");
 					this.linkError(link);

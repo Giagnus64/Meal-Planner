@@ -6,8 +6,8 @@ import {ui} from "./ui.js";
 
 //Event Listeners
 document.querySelector(".shopping-list").addEventListener("click", clearListItems);
-document.querySelector(".add-shopping-list").addEventListener("click", queryListItem);
-document.querySelector(".date-input").addEventListener("click", getDateInput);
+document.querySelector(".add-shopping-list").addEventListener("click", shoppingListEdit);
+document.querySelector(".date-button").addEventListener("click", getDateInput);
 document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
 
 //Default Behavior/HTML Generation
@@ -16,23 +16,27 @@ document.querySelector(".card-day-container").addEventListener("click", dayCardE
   ui.generateDayCards(dateArray);
 
 // *** Date Functions ***
-function getDateInput(){
-	//VERIFY?!
-	//prompt for start date
-	let date = prompt("Enter Start Date as mm/dd");
-	// split input into array
-	let dateArray = date.split("/");
-	//make a new date object
-	let startDate = new Date();
-	//set month (adding 1 due to month array starting at 0)
-	startDate.setMonth(dateArray[0] - 1);
-	startDate.setDate(dateArray[1]);
-	let userDate = getWeekArray(startDate);
-	ui.generateDayCards(userDate);
-	
+function getDateInput(e){
+	let date = document.querySelector(".date-input").value;
+	console.log(date);
+	//Check if date is empty(HTML verifies by returning empty string for false dates)
+	if(date !== ''){
+		// split input into array
+		let dateArray = date.split("-");
+		//make a new date object
+		let startDate = new Date();
+		//set month (adding 1 due to month array starting at 0)
+		startDate.setMonth(dateArray[1] - 1);
+		startDate.setDate(dateArray[2]);
+		let userDate = getWeekArray(startDate);
+		ui.generateDayCards(userDate);
+	} else{
+		return false;
+	}
 	// test
 	//console.log(dateArray, startDate);
 }
+
 
 //enter start date, default is today, based on user input
 function getWeekArray(startDate){
@@ -80,6 +84,9 @@ function clearListItems(e){
 		shoppingList.clearList();
 		}
 	}
+}
+function shoppingListEdit(e){
+	shoppingList.editState(e);
 }
 //prompts for items to add to shopping list, then adds them
 function queryListItem(){
