@@ -16,8 +16,17 @@
 	  </button>
 	  <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
 	  	<div class="navbar-nav navbar">
-    			<a class="nav-item btn btn-warning date-input">Enter Date</a>
-    			<a class="nav-item btn btn-secondary reset-all ">Reset All</a>
+	  		<form class="form-inline form-group mb-0">
+	  			<div class="form-row">
+	  				<div class="col-auto col-input">
+	  					<input class="form-control mr-0 date-input" type="date" aria-label="Search">
+	  				</div>
+	  				<div class="col-auto">
+	  					<button type="button" class="nav-item btn btn-warning date-button">Enter Date</button>
+	  				</div>
+	  			</div>	
+	  		</form>
+    			<!--<button class="nav-item btn btn-secondary reset-all ">Reset All</button>-->
 	  	</div>
 	  </div>
 	</nav>
@@ -27,7 +36,7 @@
 				<form>
 					<div class="form-group">
 						<h2 class="recipe-search-title text-center">Search For Recipes</h2>
-		   				 <label for="search-input">Enter ingredients separated by commas, or the name of a dish</label>
+		   				 <label class="text-center" for="search-input">Enter ingredients separated by commas, or the name of a dish</label>
 		    			<textarea class="form-control" id="search-input" rows="1"></textarea>
 		    			<button type="submit" class="btn btn-info mx-auto mt-3 search-recipe-submit">Search</button>
 	  				</div>
@@ -96,115 +105,20 @@
 					-->
 			</div>
 			<!-- Days -->
-			<div class="row justify-content-center">
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>
-				<div class="col-md-auto p-0 card-column">
-					<div class="card border-primary card-day">
-					  	<div class="card-body">
-						    <h5 class="card-title">8/8</h5>
-						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Chicken Cutlets and Broccoli Rabe</a></p>
-						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Avocado Toast with Eggs</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text"><a href="#" class="recipe-link">Pork Tenderloin and Roasted Veggies</a></p>
-						    <a href="#" class="card-link btn btn-outline-primary">Add Meal</a>
-						    <a href="#" class="card-link btn btn-outline-secondary">Delete Meal</a>
-					 	 </div>
-					</div>
-				</div>	
-			</div>
+			<div class="row justify-content-center align-content-center card-day-container">
+			</div> 
 		</div>
 		<div class="container justify-content-center shopping-list">
 			<h3 class="list-title text-center">Shopping List</h3>
 				<ul class="list-group shopping-list-start">
 					<li class="list-group-item border-info item-1">Rice<button type="button" class="close close-x" aria-label="Close"><span class="close-x" aria-hidden="true">&times;</span></button></li>
 				</ul>
-				<div class="row justify-content-center">
-						<button type="button" class="btn btn-primary mt-3 mr-3 add-shopping-list">Add Item</button>
-						<button type="button" class="btn btn-secondary mt-3 clear-shopping-list">Clear List</button>
+ 				<div class="form-group mt-2">
+   					<textarea class="form-control shopping-list-input" rows="2" placeholder="Enter items separated by commas i.e. Rice, Chicken, Bay Leaves"></textarea>
+  				</div> 
+				<div class="row justify-content-center mt-2">
+						<button type="button" class="btn btn-primary mr-3 add-shopping-list">Add Items</button>
+						<button type="button" class="btn btn-secondary clear-shopping-list">Clear List</button>
 					</div>
 		</div>
 	</div>
