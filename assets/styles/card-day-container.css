@@ -16,10 +16,10 @@
 .card-day-edit:hover{
 	color:white;
 }
-/*.card-day-edit{
+.card-day-edit, .card-day-save{
 	display:block;
 	margin-left:auto;
-}*/
+}
 
 @media(max-width: 575.98px){
 	.flex-body {

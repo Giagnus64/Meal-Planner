@@ -50,6 +50,9 @@ html, body{
     border-radius: 0.3rem;
 	}
 }
+.date-input ~ .invalid-feedback{
+	color:black;
+}
 button.btn:not(.btn-outline-primary, .btn-outline-info){
 	color:rgb(100,100,100);
 	border-color:rgb(150,150,150);
@@ -79,10 +82,10 @@ button.btn.disabled{
 .card-day-edit:hover{
 	color:white;
 }
-/*.card-day-edit{
+.card-day-edit, .card-day-save{
 	display:block;
 	margin-left:auto;
-}*/
+}
 @media(max-width: 575.98px){
 	.flex-body {
 		flex-wrap:wrap;

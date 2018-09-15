@@ -1,76 +1,39 @@
 //import {recipe} from "./recipe.js";
 import {shoppingList} from "./shoppingList.js";
-import {ui} from "./ui.js";
+import {dayCards} from "./dayCards.js";
+import {dateCalc} from "./date.js";
 
 //Variables
 
 //Event Listeners
 document.querySelector(".shopping-list").addEventListener("click", clearListItems);
-document.querySelector(".add-shopping-list").addEventListener("click", shoppingListEdit);
-document.querySelector(".date-button").addEventListener("click", getDateInput);
+document.querySelector(".add-shopping-list").addEventListener("click", shoppingListAdd);
+document.querySelector(".date-button").addEventListener("click", getDateArray);
 document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
 
 //Default Behavior/HTML Generation
   let today = new Date();
-  let dateArray = getWeekArray(today);
-  ui.generateDayCards(dateArray);
+  let dateArray = dateCalc.getWeekArray(today);
+  dayCards.generateDayCards(dateArray);
 
-// *** Date Functions ***
-function getDateInput(e){
-	let date = document.querySelector(".date-input").value;
-	console.log(date);
-	//Check if date is empty(HTML verifies by returning empty string for false dates)
-	if(date !== ''){
-		// split input into array
-		let dateArray = date.split("-");
-		//make a new date object
-		let startDate = new Date();
-		//set month (adding 1 due to month array starting at 0)
-		startDate.setMonth(dateArray[1] - 1);
-		startDate.setDate(dateArray[2]);
-		let userDate = getWeekArray(startDate);
-		ui.generateDayCards(userDate);
-	} else{
-		return false;
+//Date button
+function getDateArray(){
+	let dateArray = dateCalc.getDateInput();
+	if(dateArray){
+		dayCards.generateDayCards(dateArray);
 	}
-	// test
-	//console.log(dateArray, startDate);
-}
-
-
-//enter start date, default is today, based on user input
-function getWeekArray(startDate){
-	//make array to generate html with
-	const dateArray = [];
-	//push initial date to Array
-	let firstDay = startDate.getDate();
-	let firstMonth = startDate.getMonth();
-	// push date string to array (adding 1 to fix for month array)
-	dateArray.push((firstMonth + 1) + "/"+ firstDay);
-	//push next 6 days to array
-	for(let i=0; i<6; i++){
-		startDate.setDate(startDate.getDate() + 1)//** change this;
-		let day = startDate.getDate();
-		let month = startDate.getMonth();
-		// push date string to array( adding 1 to fix for month array)
-		dateArray.push((month + 1) + "/"+ day);
-		//test
-		//console.log(dateArray, startDate);
-	}
-	return dateArray;
+	
 }
 
 //*****
-
 //Day-Card Functions
 function dayCardEdit(e){
 	if (e.target.classList.contains("card-day-edit")){
-		ui.editState(e);
+		dayCards.editState(e);
 	} else if(e.target.classList.contains("card-day-save")){
-		ui.saveEdits(e);
+		dayCards.saveEdits(e);
 	}
 }
-
 
 //*** Shopping List Functions ***
 //checks for items to clear by button clicked
@@ -85,16 +48,15 @@ function clearListItems(e){
 		}
 	}
 }
-function shoppingListEdit(e){
-	shoppingList.editState(e);
-}
-//prompts for items to add to shopping list, then adds them
-function queryListItem(){
-	//ask for Items to add to list
-	let items = prompt("Enter items, separated by commas, to add to shopping list:");
-	//split into array to pass to shoppingList function
-	let itemList = items.split(',');
-	shoppingList.addItems(itemList);
+function shoppingListAdd(){
+	const input = document.querySelector(".shopping-list-input");
+	if(input.value !== ''){
+		const items = input.value;
+		//split into array to pass to shoppingList function
+		const itemList = items.split(',');
+		shoppingList.addItems(itemList);
+	}
+	input.value = '';
 }
 // // test item input
 // shoppingList.addItem([" 2 lbs of Chicken", " 1 can of Red Beans"]);
