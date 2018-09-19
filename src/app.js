@@ -10,8 +10,9 @@ document.querySelector(".shopping-list").addEventListener("click", clearListItem
 document.querySelector(".add-shopping-list").addEventListener("click", shoppingListAdd);
 document.querySelector(".date-button").addEventListener("click", getDateArray);
 document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
-document.querySelector(".card-recipe-container").addEventListener("click", searchRecipesSubmit);
+document.querySelector(".card-recipe-container").addEventListener("click", recipeCardButtons);
 document.querySelector(".card-container-all").addEventListener("click", recipeNavButtons);
+
 
 //searchRecipes();
 
@@ -20,14 +21,18 @@ document.querySelector(".card-container-all").addEventListener("click", recipeNa
 //Default Behavior/HTML Generation of days
   let today = new Date();
   let dateArray = dateCalc.getWeekArray(today);
+  dateCalc.changeModalDates(dateArray);
   dayCards.generateDayCards(dateArray);
 
 //Recipe functions
-function searchRecipesSubmit(e){
+function recipeCardButtons(e){
 	//calls function when search button is clicked
 	if(e.target.classList.contains("search-recipe-submit")){
 		const input = e.target.previousElementSibling.value;
-		//convert recipe into searchable
+		return true;	
+	}
+	if(e.target.classList.contains("add-to-plan")){
+		recipe.changeModal(e);
 	}
 }
 
@@ -71,6 +76,7 @@ function getDateArray(){
 	let dateArray = dateCalc.getDateInput();
 	//verifies the user has something in input
 	if(dateArray){
+		dateCalc.changeModalDates(dateArray);
 		dayCards.generateDayCards(dateArray);
 	}
 	

@@ -1,9 +1,17 @@
 class DateCalc{
 	constructor(){
 		this.date = document.querySelector(".date-input");
+		this.modalSelect = document.querySelector("#day-select");
 
 	}
-
+	// adds dates as choices in modal when adding searched recipes
+	changeModalDates(dateArray){
+		let html = '';
+		dateArray.forEach(date =>{
+			html += `<option>${date}</option>`;
+			this.modalSelect.innerHTML = html;
+		})
+	}
  	getDateInput(){
 		this.date = document.querySelector(".date-input");
 		//Check if date is empty(HTML verifies by returning empty string for false dates)

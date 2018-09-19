@@ -7,6 +7,8 @@ class Recipe {
 		this.recipeBox = document.querySelector(".card-recipe-container");
 		this.flexContainer = document.querySelector(".card-container-all");
 		this.dayCards = document.querySelector(".card-day-container");
+		this.modalTitle = document.querySelector("#modal-title");
+		this.modalButton = document.querySelector("#add-recipe-modal");
 	}
 	//Get request
 	async get(url){
@@ -32,6 +34,15 @@ class Recipe {
 
 	recipeLoad(){
 		return 0;
+	}
+
+	changeModal(e){
+		const addToDayBtn = e.target;
+		const recipeID = e.target.dataset.recipeId;
+		const recipeTitle = e.target.parentElement.firstElementChild.innerText;
+		this.modalTitle.innerHTML = `Add Recipe: ${recipeTitle}`;
+		this.modalButton.setAttribute('data-recipe-id', recipeID);
+		return true;
 	}
 
 	// navigates through multiple pages when required
@@ -154,7 +165,7 @@ class Recipe {
 	    				<h5 class="card-title "><strong>${recipeArray[i].title}</strong></h5>
 	    				<h6 class="card-subtitle mb-2"><em>${recipeArray[i].publisher}</em></h6>
 	    				<a href="${recipeArray[i].source_url}" target="_blank" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a data-recipe-id="${recipeArray[i].recipe_id}" class="btn btn-info btn-sm add-to-plan">Add to Day</a>
+	    				<a data-toggle="modal" data-target="#add-to-day" data-recipe-id="${recipeArray[i].recipe_id}" class="btn btn-info btn-sm add-to-plan">Add to Day</a>
 	  				</div>
 				</div>
 			</div>`;

@@ -30,6 +30,66 @@
 	  	</div>
 	  </div>
 	</nav>
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-to-day">
+  	Launch demo modal
+	</button>
+
+	<!-- Modal -->
+	<div class="modal fade" id="add-to-day" tabindex="-1" role="dialog" aria-labelledby="Add Recipe" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="modal-title">Add Recipe</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      <form>
+			  <div class="form-group row">
+			    <label for="day-select" class="col-sm-2 col-form-label">Day</label>
+			    <div class="col-sm-10">
+			      <div class="form-group">
+       				<select class="form-control" id="day-select">
+      				  <option>9/14</option>
+				      <option>9/15</option>
+				      <option>9/16</option>
+				    </select>
+				  </div>
+			    </div>
+			  </div>
+			  <div class="form-group row">
+			    <label for="meal-select" class="col-sm-2 col-form-label">Meal</label>
+			    <div class="col-sm-10">
+			      <div class="form-group">
+       				<select class="form-control" id="meal-select">
+      				  <option>Breakfast</option>
+				      <option>Lunch</option>
+				      <option>Dinner</option>
+				    </select>
+				  </div>
+			    </div>
+			  </div>
+			  <div class="form-group row">
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input class="form-check-input" type="checkbox" id="add-ingredients">
+			        <label class="form-check-label" for="add-ingredients">
+			          Add Ingredients to Shopping List
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+		  </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary" id="add-recipe-modal">Add Recipe</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<div class="flex-body d-flex">
 		<div class="container d-flex flex-wrap justify-content-center card-container-all">
 			<div class="row card-recipe-container mt-3 mb-3 justify-content-center">
