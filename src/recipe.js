@@ -14,7 +14,6 @@ class Recipe {
 		const resData = await response.json();
 		return resData;
 	}
-	//** Remember to convert inputs with spaces! i.e. chicken breast needs to become chicken%20breast
 	searchRecipesByTerm(){
 		let list;
 		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${this.APIkey}&q=${this.search}`)
@@ -27,13 +26,6 @@ class Recipe {
 		})
 		.catch(err =>console.log(err));
 	}
-
-	copyRecipes(recipeArray){
-		//work wiht Json.stringify? recursive function
-		const recipeList = Array.from(recipeArray);
-		console.log(recipeList, "fromcopy");
-	}
-
 	searchRecipesByID(){
 		return 0;
 	}
@@ -41,29 +33,82 @@ class Recipe {
 	recipeLoad(){
 		return 0;
 	}
+
+	// navigates through multiple pages when required
+	changePage(navigation){
+		const recipeCards = document.querySelectorAll(".card-recipe-col");
+		const pages = Math.ceil(recipeCards.length / 6);
+		const firstVisible = document.querySelector(".card-recipe-col:not(.card-hidden)");
+		const currentPage = parseInt(firstVisible.dataset.page);
+		let pageToShow;
+		//checks if previous page is available, hides all other pages except for page requested by user
+		if(navigation === 'prev'){
+			if(currentPage === 1){
+				return false;
+			}
+			pageToShow = (currentPage - 1).toString();			
+			this.hidePages(pageToShow);
+			return true;
+		//same as above, checks if next page is available
+		} else {
+			pageToShow = (currentPage + 1).toString();
+			if(currentPage === pages){
+				return false;
+			}
+			this.hidePages(pageToShow);
+			return true;
+		}
+	}
+
+	//hides extra recipe pages when navigating
+	hidePages(page){
+		const recipeCards = document.querySelectorAll(".card-recipe-col");
+		recipeCards.forEach(card =>{
+				card.classList.remove("card-hidden");
+				if(card.dataset.page !== page){
+					card.classList.add("card-hidden");
+				}
+			});
+		return true;
+	}
+
+	//changes recipe div back to search state
+	recipeSearchState(e){
+		//removes recipe page nav buttons
+		e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+		this.recipeBox.innerHTML = `<form>
+					<div class="form-group">
+						<h2 class="recipe-search-title text-center">Search For Recipes</h2>
+		   				 <label class="text-center" for="search-input">Enter ingredients separated by commas, or the name of a dish</label>
+		    			<textarea class="form-control" id="search-input" rows="1"></textarea>
+		    			<button type="button" class="btn btn-info mx-auto mt-3 search-recipe-submit">Search</button>
+	  				</div>
+	  			</form>`;
+	  	return true;
+	}
+
 	//displays buttons for recipe navigation
 	recipeNavBtns(pageNav){
 		//create button container div
 		const div = document.createElement('div');
-		div.classList.add('recipe-controls','mb-3');
+		div.classList.add('recipe-controls-container','mb-3');
 		let pageNavBtns = '';
 		// if more than 6 recipes, put in next page button
 		if(pageNav){
-			pageNavBtns = '<button class="prev-page btn btn-warning">Prev Page</button> <button class="next-page btn btn-warning">Next Page</button>'
+			pageNavBtns = '<button class="prev-page btn btn-warning btn-sm">Prev Page</button> <button class="next-page btn btn-warning btn-sm">Next Page</button>'
 		}
-		const html = `<div class="recipe-controls mb-3">${pageNavBtns}
-				<button class="new-search btn btn-info">New Search</button>
+		const html = `<div class="recipe-controls">${pageNavBtns} <button class="new-search btn btn-info btn-sm">New Search</button>
 			</div>`;
 		div.innerHTML = html;
 		this.flexContainer.insertBefore(div, this.dayCards);
 		return true;
 	}
-	//spilts recipes, generates/displays html 
-	//rethink this - potentially generate html for all items in the list, and store it in something? maybe display changes via css? in order to only show 6 at a time...
+
+	//splits recipes, generates/displays html 
 	displayRecipes(recipeArray){
 		let html = '';
-		let pages =1;
-		let pageNumber = 0;
+		let pages;
+		let pageNumber = 1;
 		let displayArr = recipeArray;
 		let remainingArr;
 		let pageNav = false;
@@ -82,28 +127,33 @@ class Recipe {
 			//add the page to the html string
 			html+=page;
 			//loop over the rest of the pages, adding the corresponding page numbers to the sets of 6 recipes, and increasing the page numbers
-			for(let i = 1; i < pages; i++){
+			for(let i = 0; i <= pages; i++){
 				displayArr = remainingArr.slice(0,6);
 				remainingArr = remainingArr.slice(6);
 				page = this.generateRecipeHTML(displayArr, pageNumber)
 				html += page;
 				pageNumber++;
 			}
+		} else{
+			html = this.generateRecipeHTML(displayArr);
 		}
 		// generate nav buttons for recipes
 	    this.recipeNavBtns(pageNav);
 		this.recipeBox.innerHTML = html;
+		this.hidePages('1');
+		return true;
 	}
+	//generates html with proper page numbers for each recipe "set"
 	generateRecipeHTML(recipeArray, pageNumber){
 		let html = '';
 		for(let i = 0; i < recipeArray.length; i++){	
-			html += `<div class="col-md-auto p-0 m-1 card-recipe-col data-page="${pageNumber}">
+			html += `<div class="col-md-auto p-0 m-1 card-recipe-col" data-page="${pageNumber}">
 		  		<div class="card card-recipe border-info">
 		  			<img class="card-img-top" src="${recipeArray[i].image_url}">
 	  				<div class="card-body text-center">
 	    				<h5 class="card-title "><strong>${recipeArray[i].title}</strong></h5>
 	    				<h6 class="card-subtitle mb-2"><em>${recipeArray[i].publisher}</em></h6>
-	    				<a href="${recipeArray[i].f2f_url}" target="_blank" class="btn btn-warning btn-sm">Recipe Page</a>
+	    				<a href="${recipeArray[i].source_url}" target="_blank" class="btn btn-warning btn-sm">Recipe Page</a>
 	    				<a data-recipe-id="${recipeArray[i].recipe_id}" class="btn btn-info btn-sm add-to-plan">Add to Day</a>
 	  				</div>
 				</div>

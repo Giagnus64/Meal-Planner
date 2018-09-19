@@ -10,19 +10,20 @@ document.querySelector(".shopping-list").addEventListener("click", clearListItem
 document.querySelector(".add-shopping-list").addEventListener("click", shoppingListAdd);
 document.querySelector(".date-button").addEventListener("click", getDateArray);
 document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
-document.querySelector(".card-recipe-container").addEventListener("click", recipeClickDele);
+document.querySelector(".card-recipe-container").addEventListener("click", searchRecipesSubmit);
+document.querySelector(".card-container-all").addEventListener("click", recipeNavButtons);
 
 //searchRecipes();
 
 
 
-//Default Behavior/HTML Generation
+//Default Behavior/HTML Generation of days
   let today = new Date();
   let dateArray = dateCalc.getWeekArray(today);
   dayCards.generateDayCards(dateArray);
 
 //Recipe functions
-function recipeClickDele(e){
+function searchRecipesSubmit(e){
 	//calls function when search button is clicked
 	if(e.target.classList.contains("search-recipe-submit")){
 		const input = e.target.previousElementSibling.value;
@@ -30,7 +31,24 @@ function recipeClickDele(e){
 	}
 }
 
+function recipeNavButtons(e){
+	if(e.target.classList.contains("prev-page")){
+		recipe.changePage("prev");
+	}
+	if(e.target.classList.contains("next-page")){
+		recipe.changePage("next");
+	}
+	if(e.target.classList.contains("new-search")){
+		recipe.recipeSearchState(e);
+		window.scroll({
+  		  top: 0,
+ 		  behavior: "smooth"
+		});
+	}
 
+}
+
+//called when user searches recipes
 function searchRecipes(){
 	recipe.searchRecipesByTerm()
 		.then(response =>{
@@ -48,8 +66,10 @@ function searchRecipes(){
 
 
 //Date button
+//gets date array from user input
 function getDateArray(){
 	let dateArray = dateCalc.getDateInput();
+	//verifies the user has something in input
 	if(dateArray){
 		dayCards.generateDayCards(dateArray);
 	}
@@ -57,6 +77,7 @@ function getDateArray(){
 }
 
 //Day-Card Functions
+//delegates clicks on day cards to change state and save edits
 function dayCardEdit(e){
 	if (e.target.classList.contains("card-day-edit")){
 		dayCards.editState(e);
@@ -78,6 +99,7 @@ function clearListItems(e){
 		}
 	}
 }
+//passes items in textarea to function that adds them to shopping list
 function shoppingListAdd(){
 	const input = document.querySelector(".shopping-list-input");
 	if(input.value !== ''){
