@@ -132,3 +132,6 @@ button.btn.disabled{
 		flex-shrink:2;
 	}
 }
+.card-recipe-col{
+	max-width:300px;
+}
