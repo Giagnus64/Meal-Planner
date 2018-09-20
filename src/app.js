@@ -14,9 +14,6 @@ document.querySelector(".card-recipe-container").addEventListener("click", recip
 document.querySelector(".card-container-all").addEventListener("click", recipeNavButtons);
 
 
-//searchRecipes();
-
-
 
 //Default Behavior/HTML Generation of days
   let today = new Date();
@@ -28,12 +25,19 @@ document.querySelector(".card-container-all").addEventListener("click", recipeNa
 function recipeCardButtons(e){
 	//calls function when search button is clicked
 	if(e.target.classList.contains("search-recipe-submit")){
-		const input = e.target.previousElementSibling.value;
+		const input = e.target.parentElement.querySelector('textarea');
+		if(input.value !== ''){
+			recipe.removeError(input);
+			searchRecipes(input.value);	
+		} else{
+			recipe.inputError(input);
+		}
 		return true;	
 	}
 	if(e.target.classList.contains("add-to-plan")){
 		recipe.changeModal(e);
 	}
+
 }
 
 function recipeNavButtons(e){
@@ -54,18 +58,23 @@ function recipeNavButtons(e){
 }
 
 //called when user searches recipes
-function searchRecipes(){
-	recipe.searchRecipesByTerm()
+function searchRecipes(input){
+	recipe.searchRecipesByTerm(input)
 		.then(response =>{
-			//this will be what is returned from the recipe class
-			//recipeArray = response;
-			//return recipeArray;
+			// checks if recipe array has recipes
+			if(response.count === 0){
+				recipe.searchError();
+			} else {
+				//response is the array of recipes
+				recipe.displayRecipes(response.recipes);
+			}
+			
+			
 		})
 		.catch(err =>{
 			//Show error message;
 			console.log(err);
 		});
-	//return recipeArray;
 }
 
 

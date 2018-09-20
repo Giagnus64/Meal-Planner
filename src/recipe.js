@@ -9,6 +9,7 @@ class Recipe {
 		this.dayCards = document.querySelector(".card-day-container");
 		this.modalTitle = document.querySelector("#modal-title");
 		this.modalButton = document.querySelector("#add-recipe-modal");
+		this.modal = document.querySelector('.modal');
 	}
 	//Get request
 	async get(url){
@@ -16,15 +17,15 @@ class Recipe {
 		const resData = await response.json();
 		return resData;
 	}
-	searchRecipesByTerm(){
+	searchRecipesByTerm(input){
 		let list;
-		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${this.APIkey}&q=${this.search}`)
+		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
 		.then(results => {
 			//check for errors
 			//gives an object with count and recipe array
 			console.log(results);
 			console.log(results.recipes, "from recipe orig");
-			return results.recipes;	
+			return results;	
 		})
 		.catch(err =>console.log(err));
 	}
@@ -158,9 +159,8 @@ class Recipe {
 	generateRecipeHTML(recipeArray, pageNumber){
 		let html = '';
 		for(let i = 0; i < recipeArray.length; i++){	
-			html += `<div class="col-md-auto p-0 m-1 card-recipe-col" data-page="${pageNumber}">
+			html += `<div class="col-sm-12 col-md-6 col-lg-4 p-0 m-1 card-recipe-col" data-page="${pageNumber}">
 		  		<div class="card card-recipe border-info">
-		  			<img class="card-img-top" src="${recipeArray[i].image_url}">
 	  				<div class="card-body text-center">
 	    				<h5 class="card-title "><strong>${recipeArray[i].title}</strong></h5>
 	    				<h6 class="card-subtitle mb-2"><em>${recipeArray[i].publisher}</em></h6>
@@ -172,7 +172,34 @@ class Recipe {
 		}
 		return html;
 	}
-
-
+	//shows error on search input if empty
+	inputError(input){
+		//add error class
+		const div = document.createElement('div');
+		const text = document.createTextNode('Input cannot be blank.');
+		div.appendChild(text);
+		div.classList.add("invalid-feedback");
+		this.removeError(input);
+		input.classList.add('is-invalid');
+		input.insertAdjacentElement('afterEnd', div);	
+		return true;
+	}
+	//removes error message from search input
+	removeError(input){
+		//checks is error message exists
+		if(input.nextElementSibling.classList.contains("invalid-feedback")){
+			input.parentElement.removeChild(input.nextElementSibling);
+			input.classList.remove('is-invalid');
+		}
+	}
+	searchError(){
+		const div = document.createElement('div');
+		div.innerHTML = `Your search yielded no results. Please search using different terms.<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>`;
+		div.classList.add('alert', 'alert-danger','alert-dismissible');
+		div.setAttribute('role','alert');
+		this.recipeBox.insertAdjacentElement('beforeBegin', div);
+	}
 }
 export const recipe = new Recipe();

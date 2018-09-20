@@ -19,3 +19,11 @@
 		font-size:.75rem;
 	}
 }
+.card-img-top{
+	max-height:200px;
+	max-width:300px;
+}
+.card-recipe{
+	max-height:180px;
+	max-width:300px;
+}
