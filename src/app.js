@@ -89,6 +89,8 @@ function dayCardEdit(e){
 		dayCards.editState(e);
 	} else if(e.target.classList.contains("card-day-save")){
 		dayCards.saveEdits(e);
+	} else if(e.target.classList.contains("add-meal")){
+		dayCards.addForm(e);
 	}
 }
 
@@ -195,6 +197,6 @@ source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
 title:"Buffalo Chicken Chowder"
 }
 ];
-recipe.displayRecipes(recipeArray);
+//recipe.displayRecipes(recipeArray);
 
 
