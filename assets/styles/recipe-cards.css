@@ -17,6 +17,7 @@
 	
 	&.btn{
 		font-size:.75rem;
+		margin-bottom:5px;
 	}
 }
 .card-img-top{
