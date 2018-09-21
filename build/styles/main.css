@@ -400,3 +400,36 @@ button.btn.disabled{
   transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
 }
 </style></div>*/
+.footer{
+	color:white;
+	font-size:1.25rem;
+	text-align:center;
+	justify-content:space-around;
+	min-height:50px;
+	align-items:center;
+}
+.copyright{
+	margin-right:40px;
+	display:inline-block;
+}
+.copyright-icon{
+	margin-right:5px;
+	margin-top:5px;
+}
+.icons{
+	display:inline-block;
+}
+.icons a{
+		color:white;
+		margin:1px;
+	}
+@media(min-width:575px){
+	.footer{
+		justify-content:center;
+	}
+}
+@media(min-width:800px){
+	.footer{
+		font-size:1.5rem;
+	}
+}
