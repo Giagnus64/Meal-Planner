@@ -9050,9 +9050,230 @@ module.exports = function (regExp, replace) {
 
 var _recipe = __webpack_require__(329);
 
-var results = _recipe.recipe.searchRecipesByTerm();
-//Not working asynchronously
-//console.log(results, "3");
+var _shoppingList = __webpack_require__(330);
+
+var _dayCards = __webpack_require__(331);
+
+var _date = __webpack_require__(332);
+
+//Event Listeners
+document.querySelector(".shopping-list").addEventListener("click", clearListItems);
+document.querySelector(".add-shopping-list").addEventListener("click", shoppingListAdd);
+document.querySelector(".date-button").addEventListener("click", getDateArray);
+document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
+document.querySelector(".card-recipe-container").addEventListener("click", recipeCardButtons);
+document.querySelector(".card-container-all").addEventListener("click", recipeNavButtons);
+document.querySelector("#add-recipe-modal").addEventListener("click", addRecipeToDay);
+
+//Default Behavior/HTML Generation of days
+var today = new Date();
+var dateArray = _date.dateCalc.getWeekArray(today);
+// changes modal options
+_date.dateCalc.changeModalDates(dateArray);
+_dayCards.dayCards.generateDayCards(dateArray);
+
+//Recipe functions
+function recipeCardButtons(e) {
+	//calls function when search button is clicked
+	if (e.target.classList.contains("search-recipe-submit")) {
+		var input = e.target.parentElement.querySelector('textarea');
+		if (input.value !== '') {
+			_recipe.recipe.removeError(input);
+			_recipe.recipe.showLoading();
+			searchRecipes(input.value);
+		} else {
+			_recipe.recipe.inputError(input);
+		}
+		return true;
+	}
+	if (e.target.classList.contains("add-to-plan")) {
+		_recipe.recipe.changeModal(e);
+	}
+}
+
+function recipeNavButtons(e) {
+	if (e.target.classList.contains("prev-page")) {
+		_recipe.recipe.changePage("prev");
+	}
+	if (e.target.classList.contains("next-page")) {
+		_recipe.recipe.changePage("next");
+	}
+	if (e.target.classList.contains("new-search")) {
+		_recipe.recipe.recipeSearchState(e);
+		window.scroll({
+			top: 0,
+			behavior: "smooth"
+		});
+	}
+}
+
+//called when user searches recipes
+function searchRecipes(input) {
+	_recipe.recipe.searchRecipesByTerm(input).then(function (response) {
+		// checks if recipe array has recipes
+		if (response.count === 0) {
+			//replaces search box and shows error
+			_recipe.recipe.recipeSearchState();
+			_recipe.recipe.searchError('Your search yielded no results. Please search using different terms.');
+		} else {
+			//response is the array of recipes
+			_recipe.recipe.displayRecipes(response.recipes);
+		}
+	}).catch(function (err) {
+		//Show error message
+		_recipe.recipe.searchError('Something went wrong with the search. Please try again.');
+		console.log(err);
+	});
+}
+
+function addRecipeToDay(e) {
+	var modalCheckbox = document.querySelector('#add-ingredients');
+	//gets data from modal to pass in
+	var recipeData = {
+		source_url: e.target.dataset.recipeUrl,
+		title: e.target.dataset.recipeTitle
+	};
+	//gets meal that will be edited
+	var mealToEdit = _dayCards.dayCards.getMeal();
+	//checks if ingredients are needed - starts a new get request
+	if (modalCheckbox.checked) {
+		getRecipeIngredients(e.target.dataset.recipeId, mealToEdit);
+	} else {
+		//add recipe to meal without the need of a new get request
+		_dayCards.dayCards.addRecipeToMeal(mealToEdit, recipeData);
+	}
+}
+//uses get request to get ingredient info on recipe
+function getRecipeIngredients(recipeID, mealToEdit) {
+	_recipe.recipe.searchRecipesByID(recipeID).then(function (recipe) {
+		//pass response into dayCards to get input
+		_dayCards.dayCards.addRecipeToMeal(mealToEdit, recipe);
+		// pass items into shopping list
+		_shoppingList.shoppingList.addItems(recipe.ingredients);
+	}).catch(function (err) {
+		_recipe.recipe.searchError('Something went wrong when getting the ingredients. Please try again.');
+		console.log(err);
+	});
+}
+//*** End Recipe Functions ***
+//*** Date Function ***
+//gets date array from user input
+function getDateArray() {
+	var dateArray = _date.dateCalc.getDateInput();
+	//verifies the user has something in input
+	if (dateArray) {
+		_date.dateCalc.changeModalDates(dateArray);
+		_dayCards.dayCards.generateDayCards(dateArray);
+	}
+}
+
+//*** Day-Card Function ***
+//delegates clicks on day cards to change state and save edits
+function dayCardEdit(e) {
+	if (e.target.classList.contains("card-day-edit")) {
+		_dayCards.dayCards.editState(e);
+	} else if (e.target.classList.contains("card-day-save")) {
+		_dayCards.dayCards.saveEdits(e);
+	} else if (e.target.classList.contains("add-meal")) {
+		_dayCards.dayCards.addForm(e);
+	}
+}
+
+//***Shopping List Functions***
+//checks for items to clear by button clicked
+function clearListItems(e) {
+	// if x is clicked, clear list-item
+	if (e.target.classList.contains("close-x")) {
+		_shoppingList.shoppingList.clearItem(e);
+		// if clear list is clicked, comfirm you want to clear list
+	} else if (e.target.classList.contains("clear-shopping-list")) {
+		if (confirm('Clear all items on shopping list?')) {
+			_shoppingList.shoppingList.clearList();
+		}
+	}
+}
+//passes items in textarea to function that adds them to shopping list
+function shoppingListAdd() {
+	var input = document.querySelector(".shopping-list-input");
+	if (input.value !== '') {
+		var items = input.value;
+		//split into array to pass to shoppingList function
+		var itemList = items.split(',');
+		_shoppingList.shoppingList.addItems(itemList);
+	}
+	input.value = '';
+}
+
+// // test item input
+// shoppingList.addItem([" 2 lbs of Chicken", " 1 can of Red Beans"]);
+//*** End Shopping List***
+
+//API/Recipe-Box Testing
+var recipeArray = [{
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}];
+_recipe.recipe.displayRecipes(recipeArray);
 
 /***/ }),
 /* 329 */
@@ -9071,14 +9292,19 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// import {http} from "./easyhttp3"
-
 var Recipe = function () {
 	function Recipe() {
 		_classCallCheck(this, Recipe);
 
 		this.APIkey = "5f71f01a77a1fab1f3ff3a9eeb61fc10";
-		this.search = "rice";
+		//testing API search
+		//this.search = "shredded chicken, mint";
+		this.recipeBox = document.querySelector(".card-recipe-container");
+		this.flexContainer = document.querySelector(".card-container-all");
+		this.dayCards = document.querySelector(".card-day-container");
+		this.modalTitle = document.querySelector("#modal-title");
+		this.modalButton = document.querySelector("#add-recipe-modal");
+		this.modal = document.querySelector('.modal');
 	}
 	//Get request
 
@@ -9118,38 +9344,646 @@ var Recipe = function () {
 
 			return get;
 		}()
-		//** Remember to convert inputs with spaces! i.e. chicken breast needs to become chicken%20breast
-
 	}, {
 		key: "searchRecipesByTerm",
-		value: function searchRecipesByTerm() {
-			var _this = this;
-
-			var list = void 0;
-			this.get("https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=" + this.APIkey + "&q=" + this.search).then(function (results) {
-				console.log(results);
-				list = _this.copyRecipes(results.recipes);
-				return list;
-				console.log(results);
+		value: function searchRecipesByTerm(input) {
+			return this.get("https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=" + this.APIkey + "&q=" + input).then(function (results) {
+				//gives an object with count and recipe array
+				return results;
 			}).catch(function (err) {
 				return console.log(err);
 			});
 		}
 	}, {
-		key: "copyRecipes",
-		value: function copyRecipes(recipeArray) {
-			var recipeList = Array.from(recipeArray);
-			console.log(recipeList);
-		}
-	}, {
 		key: "searchRecipesByID",
-		value: function searchRecipesByID() {}
+		value: function searchRecipesByID(recipeID) {
+			return this.get("https://cors-anywhere.herokuapp.com/http://food2fork.com/api/get?key=" + this.APIkey + "&rId=" + recipeID).then(function (results) {
+				return results.recipe;
+			}).catch(function (err) {
+				console.log(err);
+			});
+		}
+
+		//Get recipe data from recipe-card html and place in modal
+
+	}, {
+		key: "changeModal",
+		value: function changeModal(e) {
+			var addToDayBtn = e.target;
+			var recipeID = addToDayBtn.dataset.recipeId;
+			var recipeTitle = addToDayBtn.parentElement.firstElementChild.innerText;
+			var recipeLink = addToDayBtn.previousElementSibling.getAttribute('href');
+			this.modalTitle.innerHTML = "Add Recipe: " + recipeTitle;
+			this.modalButton.setAttribute('data-recipe-id', recipeID);
+			this.modalButton.setAttribute('data-recipe-url', recipeLink);
+			this.modalButton.setAttribute('data-recipe-title', recipeTitle);
+			return true;
+		}
+
+		// navigates through multiple pages when required
+
+	}, {
+		key: "changePage",
+		value: function changePage(navigation) {
+			var recipeCards = document.querySelectorAll(".card-recipe-col");
+			var pages = Math.ceil(recipeCards.length / 6);
+			var firstVisible = document.querySelector(".card-recipe-col:not(.card-hidden)");
+			var currentPage = parseInt(firstVisible.dataset.page);
+			var pageToShow = void 0;
+			//checks if previous page is available, hides all other pages except for page requested by user
+			if (navigation === 'prev') {
+				if (currentPage === 1) {
+					return false;
+				}
+				pageToShow = (currentPage - 1).toString();
+				this.hidePages(pageToShow);
+				return true;
+				//same as above, checks if next page is available
+			} else {
+				pageToShow = (currentPage + 1).toString();
+				if (currentPage === pages) {
+					return false;
+				}
+				this.hidePages(pageToShow);
+				return true;
+			}
+		}
+
+		//hides extra recipe pages when navigating
+
+	}, {
+		key: "hidePages",
+		value: function hidePages(page) {
+			var recipeCards = document.querySelectorAll(".card-recipe-col");
+			recipeCards.forEach(function (card) {
+				card.classList.remove("card-hidden");
+				if (card.dataset.page !== page) {
+					card.classList.add("card-hidden");
+				}
+			});
+			return true;
+		}
+
+		//changes recipe div back to search state
+
+	}, {
+		key: "recipeSearchState",
+		value: function recipeSearchState(e) {
+			//removes recipe page nav buttons if there
+			if (e) {
+				e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+			}
+			this.recipeBox.innerHTML = "<form>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<h2 class=\"recipe-search-title text-center\">Search For Recipes</h2>\n\t\t   \t\t\t\t <label class=\"text-center\" for=\"search-input\">Enter ingredients separated by commas, or the name of a dish</label>\n\t\t    \t\t\t<textarea class=\"form-control\" id=\"search-input\" rows=\"1\"></textarea>\n\t\t    \t\t\t<button type=\"button\" class=\"btn btn-info mx-auto mt-3 search-recipe-submit\">Search</button>\n\t  \t\t\t\t</div>\n\t  \t\t\t</form>";
+			return true;
+		}
+
+		//displays buttons for recipe navigation
+
+	}, {
+		key: "recipeNavBtns",
+		value: function recipeNavBtns(pageNav) {
+			//create button container div
+			var div = document.createElement('div');
+			div.classList.add('recipe-controls-container', 'mb-3');
+			var pageNavBtns = '';
+			// if more than 6 recipes, put in next page button
+			if (pageNav) {
+				pageNavBtns = '<button class="prev-page btn btn-warning btn-sm">Prev Page</button> <button class="next-page btn btn-warning btn-sm">Next Page</button>';
+			}
+			var html = "<div class=\"recipe-controls\">" + pageNavBtns + " <button class=\"new-search btn btn-info btn-sm\">New Search</button>\n\t\t\t</div>";
+			div.innerHTML = html;
+			this.flexContainer.insertBefore(div, this.dayCards);
+			return true;
+		}
+
+		//splits recipes, generates/displays html 
+
+	}, {
+		key: "displayRecipes",
+		value: function displayRecipes(recipeArray) {
+			var html = '';
+			var pages = void 0;
+			var pageNumber = 1;
+			var displayArr = recipeArray;
+			var remainingArr = void 0;
+			var pageNav = false;
+			if (recipeArray.length > 6) {
+				pageNav = true;
+				// get number of pages of 6 recipes each
+				pages = Math.ceil(recipeArray.length / 6);
+				//split first page of recipe
+				displayArr = recipeArray.slice(0, 6);
+				//get rest of array
+				remainingArr = recipeArray.slice(6);
+				//generate html for first 6 recipes
+				var page = this.generateRecipeHTML(displayArr, pageNumber);
+				//add 1 to page number
+				pageNumber++;
+				//add the page to the html string
+				html += page;
+				//loop over the rest of the pages, adding the corresponding page numbers to the sets of 6 recipes, and increasing the page numbers
+				for (var i = 0; i <= pages; i++) {
+					displayArr = remainingArr.slice(0, 6);
+					remainingArr = remainingArr.slice(6);
+					page = this.generateRecipeHTML(displayArr, pageNumber);
+					html += page;
+					pageNumber++;
+				}
+			} else {
+				html = this.generateRecipeHTML(displayArr);
+			}
+			// generate nav buttons for recipes
+			this.recipeNavBtns(pageNav);
+			this.recipeBox.innerHTML = html;
+			this.hidePages('1');
+			return true;
+		}
+		//generates html with proper page numbers for each recipe "set"
+
+	}, {
+		key: "generateRecipeHTML",
+		value: function generateRecipeHTML(recipeArray, pageNumber) {
+			var html = '';
+			for (var i = 0; i < recipeArray.length; i++) {
+				html += "<div class=\"col-sm-12 col-md-6 col-lg-4 p-0 m-1 card-recipe-col\" data-page=\"" + pageNumber + "\">\n\t\t  \t\t<div class=\"card card-recipe border-info\">\n\t  \t\t\t\t<div class=\"card-body text-center\">\n\t    \t\t\t\t<h5 class=\"card-title \"><strong>" + recipeArray[i].title + "</strong></h5>\n\t    \t\t\t\t<h6 class=\"card-subtitle mb-2\"><em>" + recipeArray[i].publisher + "</em></h6>\n\t    \t\t\t\t<a href=\"" + recipeArray[i].source_url + "\" target=\"_blank\" class=\"btn btn-warning btn-sm\">Recipe Page</a>\n\t    \t\t\t\t<a data-toggle=\"modal\" data-target=\"#add-to-day\" data-recipe-id=\"" + recipeArray[i].recipe_id + "\" class=\"btn btn-info btn-sm add-to-plan\">Add to Day</a>\n\t  \t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>";
+			}
+			return html;
+		}
+		//shows error on search input if empty
+
+	}, {
+		key: "inputError",
+		value: function inputError(input) {
+			//add error class
+			var div = document.createElement('div');
+			var text = document.createTextNode('Input cannot be blank.');
+			div.appendChild(text);
+			div.classList.add("invalid-feedback");
+			this.removeError(input);
+			input.classList.add('is-invalid');
+			input.insertAdjacentElement('afterEnd', div);
+			return true;
+		}
+		//removes error message from search input
+
+	}, {
+		key: "removeError",
+		value: function removeError(input) {
+			//checks is error message exists
+			if (input.nextElementSibling.classList.contains("invalid-feedback")) {
+				input.parentElement.removeChild(input.nextElementSibling);
+				input.classList.remove('is-invalid');
+			}
+		}
+		//creates alert for error
+
+	}, {
+		key: "searchError",
+		value: function searchError(message) {
+			//create alert element
+			var div = document.createElement('div');
+			//fill with error passed in
+			div.innerHTML = message + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
+			div.classList.add('alert', 'alert-danger', 'alert-dismissible');
+			div.setAttribute('role', 'alert');
+			//add alert to DOM
+			this.recipeBox.insertAdjacentElement('beforeBegin', div);
+		}
+		//shows loading gif while waiting for get request response
+
+	}, {
+		key: "showLoading",
+		value: function showLoading() {
+			this.recipeBox.innerHTML = "<div class=\"lds-css ng-scope\">\n\t\t<div class=\"lds-spinner\" style=\"100%;height:100%\"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>";
+		}
 	}]);
 
 	return Recipe;
 }();
 
 var recipe = exports.recipe = new Recipe();
+
+/***/ }),
+/* 330 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ShoppingList = function () {
+	function ShoppingList() {
+		_classCallCheck(this, ShoppingList);
+
+		this.shoppingList = document.querySelector(".shopping-list-start");
+	}
+	//add items from input or from recipes in form of an array of items
+
+
+	_createClass(ShoppingList, [{
+		key: 'addItems',
+		value: function addItems(itemList) {
+			var html = '';
+			//get html of current list
+			html = this.shoppingList.innerHTML;
+			//generate html for each item in array
+			itemList.forEach(function (item) {
+				if (item !== '') {
+					html += '<li class="list-group-item border-info">' + item + '<button type="button" class="close" aria-label="Close"><span class="close-x" aria-hidden="true">&times;</span></button></li>';
+				}
+			});
+			//add it to current html and add it back into the DOM
+			this.shoppingList.innerHTML = html;
+		}
+		//clears item clicked
+
+	}, {
+		key: 'clearItem',
+		value: function clearItem(e) {
+			this.shoppingList.removeChild(e.target.parentElement.parentElement);
+		}
+		//clears all items on shopping list
+
+	}, {
+		key: 'clearList',
+		value: function clearList() {
+			this.shoppingList.innerHTML = '';
+		}
+	}]);
+
+	return ShoppingList;
+}();
+
+var shoppingList = exports.shoppingList = new ShoppingList();
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DayCards = function () {
+	function DayCards() {
+		_classCallCheck(this, DayCards);
+
+		this.dayCardContainer = document.querySelector(".card-day-container");
+	}
+
+	_createClass(DayCards, [{
+		key: "generateDayCards",
+		value: function generateDayCards(dateArray) {
+			var html = '';
+			dateArray.forEach(function (date) {
+				html += "<div class=\"col-md-auto p-0 card-column\">\n\t\t\t\t\t<div class=\"card border-primary card-day\">\n\t\t\t\t\t  \t<div class=\"card-body\">\n\t\t\t\t\t\t    <h5 class=\"card-title\">" + date + "</h5>\n\t\t\t\t\t\t    <h6 class=\"card-subtitle text-muted\">Breakfast</h6>\n\t\t\t\t\t\t    <p class=\"card-text breakfast-text\"><a target=\"_blank\" href=\"http://www.allrecipes.com\" class=\"recipe-link \">Avocado Toast with Eggs</a></p>\n\t\t\t\t\t\t    <h6 class=\"card-subtitle text-muted\">Lunch</h6>\n\t\t\t\t\t\t    <p class=\"card-text lunch-text\"><a class=\"recipe-link \" target=\"_blank\">Chicken Cutlet with Broccoli Rabe</a></p><h6 class=\"card-subtitle text-muted\">Dinner</h6>\n\t\t\t\t\t\t    <p class=\"card-text dinner-text\"><a class=\"recipe-link\" target=\"_blank\">Recipe Title</a></p>\n\t\t\t\t\t\t    \t<button class=\"card-link btn btn-outline-primary card-day-edit\">Edit</button>\n\t\t\t\t\t \t </div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>";
+			});
+			this.dayCardContainer.innerHTML = html;
+		}
+	}, {
+		key: "addMealForms",
+		value: function addMealForms(mealList) {
+			//iterate through meals on card and add forms in place
+			// use of ternary operator to check if recipe link has an href, and if not pushes string 'recipe link' in place
+			mealList.forEach(function (meal) {
+				meal.innerHTML = "<form>\n\t\t\t\t\t\t <input type=\"text\" class=\"form-control form-control-sm input-meal mb-1\" value=\"" + meal.children[0].innerText + "\">\n\t\t\t\t\t\t <input type=\"text\" class=\"form-control form-control-sm input-link mb-1\" value=\"" + (meal.children[0].getAttribute("href") ? meal.children[0].getAttribute("href") : 'Recipe Link') + "\"></form>";
+			});
+		}
+		//gets the meal selected by the modal
+
+	}, {
+		key: "getMeal",
+		value: function getMeal() {
+			var modalDate = document.querySelector('#day-select').value;
+			var modalMeal = document.querySelector('#meal-select').value;
+			var dates = this.dayCardContainer.querySelectorAll('.card-title');
+			var cardToEdit = this.matchItemInList(dates, modalDate);
+			var meals = cardToEdit.parentElement.querySelectorAll('.card-subtitle');
+			var mealToEdit = this.matchItemInList(meals, modalMeal);
+			return mealToEdit;
+		}
+
+		//gets matching item for innerText of element list
+
+	}, {
+		key: "matchItemInList",
+		value: function matchItemInList(list, match) {
+			var matchingItem = void 0;
+			list.forEach(function (item) {
+				if (item.innerText === match) {
+					matchingItem = item;
+				}
+			});
+			return matchingItem;
+		}
+
+		//adds recipe to day card
+
+	}, {
+		key: "addRecipeToMeal",
+		value: function addRecipeToMeal(mealToEdit, recipeData) {
+			var mealText = mealToEdit.nextElementSibling;
+			var html = mealText.innerHTML;
+			html += "<a target=\"_blank\" href=\"" + recipeData.source_url + "\"  class=\"recipe-link\">" + recipeData.title + "</a>";
+			mealText.innerHTML = html;
+			return true;
+		}
+
+		//converts day card to edit state
+
+	}, {
+		key: "editState",
+		value: function editState(e) {
+			var card = e.target.parentElement;
+			var mealList = card.querySelectorAll(".card-text");
+			var otherButtons = document.querySelectorAll('.card-day-edit');
+			//disable other edit buttons and set styles to disabled
+			otherButtons.forEach(function (button) {
+				button.classList.add("disabled");
+				button.disabled = true;
+			});
+			//target and change card text that will be edited
+			this.addMealForms(mealList);
+			this.addItemBtns(mealList);
+			//Change edit button to "save" and change classes for event listeners
+			var editButton = e.target;
+			editButton.innerText = "Save";
+			editButton.classList.remove("card-day-edit", "disabled", "btn-outline-primary");
+			editButton.classList.add("card-day-save", "btn-outline-info");
+			editButton.disabled = false;
+		}
+
+		// adds an add item button to each meal on a card for multiple recipe entries during a meal
+
+	}, {
+		key: "addItemBtns",
+		value: function addItemBtns(mealList) {
+			mealList.forEach(function (meal) {
+				var button = document.createElement('button');
+				var text = document.createTextNode('Add Meal');
+				button.classList.add('btn', 'add-meal', 'btn-sm', 'btn-primary');
+				button.appendChild(text);
+				meal.appendChild(button);
+			});
+		}
+		//adds form for a new item
+
+	}, {
+		key: "addForm",
+		value: function addForm(e) {
+			var newForm = document.createElement('form');
+			newForm.innerHTML = "<input type=\"text\" class=\"form-control form-control-sm input-meal mb-1\" value=\"Recipe Title\">\n\t\t  <input type=\"text\" class=\"form-control form-control-sm input-link mb-1\" value=\"Recipe Link\">";
+			var button = e.target;
+			button.insertAdjacentElement('beforebegin', newForm);
+		}
+		//saves edits on day card
+
+	}, {
+		key: "saveEdits",
+		value: function saveEdits(e) {
+			var _this = this;
+
+			//target necessary card elements
+			var card = e.target.parentElement;
+			var mealList = card.querySelectorAll(".card-text");
+			var mealInputs = card.querySelectorAll(".input-meal");
+			var linkInputs = card.querySelectorAll(".input-link");
+			//validates URLs and adds error messages
+			var linksValid = this.validateURLs(linkInputs);
+			//cease function if URL not valid
+			if (!linksValid) {
+				return false;
+			}
+			//convert forms back to meals
+			mealList.forEach(function (meal) {
+				_this.convertMealForms(meal);
+			});
+			//re-enable other edits buttons and change styles accordingly
+			var otherButtons = document.querySelectorAll('.card-day-edit');
+			otherButtons.forEach(function (button) {
+				button.classList.remove("disabled");
+				button.disabled = false;
+			});
+			//change save button back to edit button and add corresponding styles
+			var saveButton = e.target;
+			saveButton.innerText = "Edit";
+			saveButton.classList.remove("card-day-save", "btn-outline-info");
+			saveButton.classList.add("card-day-edit", "btn-outline-primary");
+		}
+
+		//converts forms in edit state back to meals
+
+	}, {
+		key: "convertMealForms",
+		value: function convertMealForms(meal) {
+			var _this2 = this;
+
+			var html = '';
+			var href = void 0;
+			//for each form in a meal
+			var mealChildren = meal.querySelectorAll('form');
+			mealChildren.forEach(function (form) {
+				console.log(form);
+				// urls
+				if (_this2.is_url(form.children[1].value)) {
+					href = form.children[1].value;
+				}
+				//append href to link
+				if (href) {
+					html += "<a target=\"_blank\" href=\"" + href + "\"  class=\"recipe-link\">" + form.children[0].value + "</a>";
+					//otherwise leave href out
+				} else {
+					html += "<a target=\"_blank\" class=\"recipe-link\">" + form.children[0].value + "</a>";
+				}
+				html += '';
+			});
+			meal.innerHTML = html;
+		}
+
+		//Verfies that link inserted by user is a proper URL
+		//taken from https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-9.php
+
+	}, {
+		key: "is_url",
+		value: function is_url(str) {
+			var regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+			if (regexp.test(str)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: "linkError",
+		value: function linkError(link) {
+			//creates and adds a new div with a new textNode and inserts it under the link element
+			var div = document.createElement('div');
+			var text = document.createTextNode('Please enter a valid URL or leave this space blank.');
+			div.appendChild(text);
+			div.classList.add("invalid-feedback");
+			//checks for error message and replaces it
+			if (link.parentElement.children.length > 1) {
+				link.parentElement.replaceChild(div, link.parentElement.lastChild);
+			} else {
+				link.parentElement.appendChild(div);
+			}
+			return 0;
+		}
+	}, {
+		key: "validateURLs",
+		value: function validateURLs(linkArray) {
+			var _this3 = this;
+
+			//validatesURL's entered and throws error if not valid	
+			var linksValid = true;
+			linkArray.forEach(function (link) {
+				if (link.value !== '' && link.value !== 'Recipe Link') {
+					if (!_this3.is_url(link.value)) {
+						link.classList.add("is-invalid");
+						_this3.linkError(link);
+						linksValid = false;
+						return false;
+					} else {
+						return true;
+					}
+				}
+			});
+			return linksValid;
+		}
+	}]);
+
+	return DayCards;
+}();
+
+var dayCards = exports.dayCards = new DayCards();
+
+/***/ }),
+/* 332 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DateCalc = function () {
+	function DateCalc() {
+		_classCallCheck(this, DateCalc);
+
+		this.date = document.querySelector(".date-input");
+		this.modalSelect = document.querySelector("#day-select");
+	}
+	// adds dates as choices in modal when adding searched recipes
+
+
+	_createClass(DateCalc, [{
+		key: "changeModalDates",
+		value: function changeModalDates(dateArray) {
+			var _this = this;
+
+			var html = '';
+			dateArray.forEach(function (date) {
+				html += "<option>" + date + "</option>";
+				_this.modalSelect.innerHTML = html;
+			});
+		}
+	}, {
+		key: "getDateInput",
+		value: function getDateInput() {
+			this.date = document.querySelector(".date-input");
+			//Check if date is empty(HTML verifies by returning empty string for false dates)
+			if (this.date.value !== '') {
+				//checks for error message and removes it
+				this.removeError();
+				// split input into array
+				var dateArray = this.date.value.split("-");
+				//make a new date object
+				var startDate = new Date();
+				//set month (adding 1 due to month array starting at 0)
+				startDate.setMonth(dateArray[1] - 1);
+				startDate.setDate(dateArray[2]);
+				var userDate = this.getWeekArray(startDate);
+				return userDate;
+			} else {
+				this.dateError();
+				return false;
+			}
+			// test
+			//console.log(dateArray, startDate);
+		}
+
+		//enter start date, default is today, based on user input
+
+	}, {
+		key: "getWeekArray",
+		value: function getWeekArray(startDate) {
+			//make array to generate html with
+			var dateArray = [];
+			//push initial date to Array
+			var firstDay = startDate.getDate();
+			var firstMonth = startDate.getMonth();
+			// push date string to array (adding 1 to fix for month array)
+			dateArray.push(firstMonth + 1 + "/" + firstDay);
+			//push next 6 days to array
+			for (var i = 0; i < 6; i++) {
+				startDate.setDate(startDate.getDate() + 1); //** change this;
+				var day = startDate.getDate();
+				var month = startDate.getMonth();
+				// push date string to array( adding 1 to fix for month array)
+				dateArray.push(month + 1 + "/" + day);
+				//test
+				//console.log(dateArray, startDate);
+			}
+			return dateArray;
+		}
+		//removesError if it exists
+
+	}, {
+		key: "removeError",
+		value: function removeError() {
+			if (this.date.nextSibling.nextSibling) {
+				this.date.nextSibling.nextSibling.parentElement.removeChild(this.date.nextSibling.nextSibling);
+			}
+		}
+	}, {
+		key: "dateError",
+		value: function dateError() {
+			//creates and adds a new div with a new textNode and inserts it under the date input
+			var div = document.createElement('div');
+			var text = document.createTextNode('Please enter a valid date.');
+			div.appendChild(text);
+			this.date.classList.add("is-invalid");
+			div.classList.add("invalid-feedback");
+			//checks for error message and replaces it
+			this.removeError();
+			this.date.parentElement.appendChild(div);
+		}
+	}]);
+
+	return DateCalc;
+}();
+
+var dateCalc = exports.dateCalc = new DateCalc();
 
 /***/ })
 /******/ ]);
