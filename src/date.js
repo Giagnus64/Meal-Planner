@@ -57,7 +57,7 @@ class DateCalc{
 		}
 		return dateArray;
 	}
-
+	//removesError if it exists
 	removeError(){
 		if(this.date.nextSibling.nextSibling){
 			this.date.nextSibling.nextSibling.parentElement.removeChild(this.date.nextSibling.nextSibling);

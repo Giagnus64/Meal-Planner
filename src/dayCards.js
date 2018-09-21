@@ -29,9 +29,41 @@ class DayCards{
 			meal.innerHTML = `<form>
 						 <input type="text" class="form-control form-control-sm input-meal mb-1" value="${meal.children[0].innerText}">
 						 <input type="text" class="form-control form-control-sm input-link mb-1" value="${(meal.children[0].getAttribute("href"))?(meal.children[0].getAttribute("href")): 'Recipe Link'}"></form>`;
-		})
+		});
 
 	}
+	//gets the meal selected by the modal
+	getMeal(){
+		 const modalDate = document.querySelector('#day-select').value;
+		 const modalMeal = document.querySelector('#meal-select').value;
+		 const dates = this.dayCardContainer.querySelectorAll('.card-title');
+		 const cardToEdit = this.matchItemInList(dates, modalDate);
+		 const meals = cardToEdit.parentElement.querySelectorAll('.card-subtitle');
+		 const mealToEdit = this.matchItemInList(meals, modalMeal);
+		 return mealToEdit;
+	}
+
+	//gets matching item for innerText of element list
+	matchItemInList(list, match){
+		let matchingItem;
+		list.forEach(item =>{
+			if(item.innerText === match){
+				matchingItem = item;
+			}
+		});
+		return matchingItem;
+
+	}
+	
+	//adds recipe to day card
+	addRecipeToMeal(mealToEdit, recipeData){
+		const mealText = mealToEdit.nextElementSibling;
+		let html = mealText.innerHTML;
+		html += `<a target="_blank" href="${recipeData.source_url}"  class="recipe-link">${recipeData.title}</a>`;
+		mealText.innerHTML = html;
+		return true;
+	}
+
 	//converts day card to edit state
 	editState(e){
 		const card = e.target.parentElement;

@@ -3,7 +3,6 @@ import {shoppingList} from "./shoppingList.js";
 import {dayCards} from "./dayCards.js";
 import {dateCalc} from "./date.js";
 
-//Variables
 
 //Event Listeners
 document.querySelector(".shopping-list").addEventListener("click", clearListItems);
@@ -12,12 +11,14 @@ document.querySelector(".date-button").addEventListener("click", getDateArray);
 document.querySelector(".card-day-container").addEventListener("click", dayCardEdit);
 document.querySelector(".card-recipe-container").addEventListener("click", recipeCardButtons);
 document.querySelector(".card-container-all").addEventListener("click", recipeNavButtons);
+document.querySelector("#add-recipe-modal").addEventListener("click", addRecipeToDay);
 
 
 
 //Default Behavior/HTML Generation of days
   let today = new Date();
   let dateArray = dateCalc.getWeekArray(today);
+  // changes modal options
   dateCalc.changeModalDates(dateArray);
   dayCards.generateDayCards(dateArray);
 
@@ -28,6 +29,7 @@ function recipeCardButtons(e){
 		const input = e.target.parentElement.querySelector('textarea');
 		if(input.value !== ''){
 			recipe.removeError(input);
+			recipe.showLoading();
 			searchRecipes(input.value);	
 		} else{
 			recipe.inputError(input);
@@ -63,23 +65,54 @@ function searchRecipes(input){
 		.then(response =>{
 			// checks if recipe array has recipes
 			if(response.count === 0){
-				recipe.searchError();
+				//replaces search box and shows error
+				recipe.recipeSearchState();
+				recipe.searchError('Your search yielded no results. Please search using different terms.');
 			} else {
 				//response is the array of recipes
 				recipe.displayRecipes(response.recipes);
-			}
-			
-			
+			}		
 		})
 		.catch(err =>{
-			//Show error message;
+			//Show error message
+			recipe.searchError('Something went wrong with the search. Please try again.')
 			console.log(err);
 		});
 }
 
-
-
-//Date button
+function addRecipeToDay(e){
+	const modalCheckbox = document.querySelector('#add-ingredients');
+	//gets data from modal to pass in
+	const recipeData = {
+		source_url:e.target.dataset.recipeUrl,
+		title:e.target.dataset.recipeTitle
+	};
+	//gets meal that will be edited
+	let mealToEdit = dayCards.getMeal();
+	//checks if ingredients are needed - starts a new get request
+	if(modalCheckbox.checked){
+		getRecipeIngredients(e.target.dataset.recipeId, mealToEdit);
+	} else {
+		//add recipe to meal without the need of a new get request
+		dayCards.addRecipeToMeal(mealToEdit, recipeData);
+	}
+}
+//uses get request to get ingredient info on recipe
+function getRecipeIngredients(recipeID, mealToEdit){
+	recipe.searchRecipesByID(recipeID)
+		.then(recipe =>{
+			//pass response into dayCards to get input
+			dayCards.addRecipeToMeal(mealToEdit, recipe);
+			// pass items into shopping list
+			shoppingList.addItems(recipe.ingredients);
+		})
+		.catch(err =>{
+			recipe.searchError('Something went wrong when getting the ingredients. Please try again.');
+			console.log(err);
+		});
+}
+//*** End Recipe Functions ***
+//*** Date Function ***
 //gets date array from user input
 function getDateArray(){
 	let dateArray = dateCalc.getDateInput();
@@ -91,7 +124,7 @@ function getDateArray(){
 	
 }
 
-//Day-Card Functions
+//*** Day-Card Function ***
 //delegates clicks on day cards to change state and save edits
 function dayCardEdit(e){
 	if (e.target.classList.contains("card-day-edit")){
@@ -103,7 +136,7 @@ function dayCardEdit(e){
 	}
 }
 
-//*** Shopping List Functions ***
+//***Shopping List Functions***
 //checks for items to clear by button clicked
 function clearListItems(e){
 	// if x is clicked, clear list-item
@@ -133,7 +166,7 @@ function shoppingListAdd(){
 // shoppingList.addItem([" 2 lbs of Chicken", " 1 can of Red Beans"]);
 //*** End Shopping List***
 
-//API Testing
+//API/Recipe-Box Testing
 const recipeArray = [
 {
 f2f_url:"http://food2fork.com/view/35169",
@@ -206,6 +239,6 @@ source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
 title:"Buffalo Chicken Chowder"
 }
 ];
-//recipe.displayRecipes(recipeArray);
+recipe.displayRecipes(recipeArray);
 
 

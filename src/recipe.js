@@ -1,9 +1,8 @@
-// import {http} from "./easyhttp3"
-
 class Recipe {
 	constructor(){
 		this.APIkey = "5f71f01a77a1fab1f3ff3a9eeb61fc10";
-		this.search = "shredded chicken, mint";
+		//testing API search
+		//this.search = "shredded chicken, mint";
 		this.recipeBox = document.querySelector(".card-recipe-container");
 		this.flexContainer = document.querySelector(".card-container-all");
 		this.dayCards = document.querySelector(".card-day-container");
@@ -17,32 +16,36 @@ class Recipe {
 		const resData = await response.json();
 		return resData;
 	}
+
 	searchRecipesByTerm(input){
-		let list;
 		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
 		.then(results => {
-			//check for errors
 			//gives an object with count and recipe array
-			console.log(results);
-			console.log(results.recipes, "from recipe orig");
 			return results;	
 		})
 		.catch(err =>console.log(err));
 	}
-	searchRecipesByID(){
-		return 0;
+
+	searchRecipesByID(recipeID){
+		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/get?key=${this.APIkey}&rId=${recipeID}`)
+			.then(results =>{
+				return results.recipe;
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	}
 
-	recipeLoad(){
-		return 0;
-	}
-
+	//Get recipe data from recipe-card html and place in modal
 	changeModal(e){
 		const addToDayBtn = e.target;
-		const recipeID = e.target.dataset.recipeId;
-		const recipeTitle = e.target.parentElement.firstElementChild.innerText;
+		const recipeID = addToDayBtn.dataset.recipeId;
+		const recipeTitle = addToDayBtn.parentElement.firstElementChild.innerText;
+		const recipeLink = addToDayBtn.previousElementSibling.getAttribute('href');
 		this.modalTitle.innerHTML = `Add Recipe: ${recipeTitle}`;
 		this.modalButton.setAttribute('data-recipe-id', recipeID);
+		this.modalButton.setAttribute('data-recipe-url', recipeLink);
+		this.modalButton.setAttribute('data-recipe-title', recipeTitle);
 		return true;
 	}
 
@@ -86,8 +89,10 @@ class Recipe {
 
 	//changes recipe div back to search state
 	recipeSearchState(e){
-		//removes recipe page nav buttons
-		e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+		//removes recipe page nav buttons if there
+		if(e){
+			e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+		}
 		this.recipeBox.innerHTML = `<form>
 					<div class="form-group">
 						<h2 class="recipe-search-title text-center">Search For Recipes</h2>
@@ -192,14 +197,21 @@ class Recipe {
 			input.classList.remove('is-invalid');
 		}
 	}
-	searchError(){
+	//creates alert for error
+	searchError(message){
+		//create alert element
 		const div = document.createElement('div');
-		div.innerHTML = `Your search yielded no results. Please search using different terms.<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>`;
+		//fill with error passed in
+		div.innerHTML = `${message}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
 		div.classList.add('alert', 'alert-danger','alert-dismissible');
 		div.setAttribute('role','alert');
+		//add alert to DOM
 		this.recipeBox.insertAdjacentElement('beforeBegin', div);
+	}
+	//shows loading gif while waiting for get request response
+	showLoading(){
+		this.recipeBox.innerHTML = `<div class="lds-css ng-scope">
+		<div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 	}
 }
 export const recipe = new Recipe();
