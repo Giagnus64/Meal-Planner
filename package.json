@@ -10,9 +10,8 @@
     "postcss": "postcss assets/styles/main.css --dir build/styles -w",
     "browsersync": "browser-sync -w",
     "copy-build": "cp -R build docs",
-    "copy-images": "cp -R assets/images docs/assets",
     "copy-html": "cp index.html docs",
-    "copy-all": "npm run copy-build && npm run copy-images && npm run copy-html"
+    "copy-all": "npm run copy-build && npm run copy-html"
   },
   "author": "Gianfranco Nuschese",
   "license": "MIT",

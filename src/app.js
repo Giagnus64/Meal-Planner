@@ -164,9 +164,10 @@ function shoppingListAdd(){
 
 // // test item input
 // shoppingList.addItem([" 2 lbs of Chicken", " 1 can of Red Beans"]);
+
 //*** End Shopping List***
 
-//API/Recipe-Box Testing
+/*//API/Recipe-Box Testing
 const recipeArray = [
 {
 f2f_url:"http://food2fork.com/view/35169",
@@ -239,6 +240,6 @@ source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
 title:"Buffalo Chicken Chowder"
 }
 ];
-recipe.displayRecipes(recipeArray);
+recipe.displayRecipes(recipeArray);*/
 
 

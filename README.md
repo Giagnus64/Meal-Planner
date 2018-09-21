@@ -3,7 +3,7 @@
 ### Author: Gianfranco Nuschese ###
 
 ### Description: ###
-A webapp(front-end only) that allows user to plan meals for a week, make shopping lists, search for recipes, and add those recipe components to their plan. Uses Bootstrap and the Food2Fork API. % - Live at [GitHub Pages](https://giagnus64.github.io/Bill-Splitter/) %
+A webapp (front-end only) that allows user to plan meals for a week, make shopping lists, search for recipes, and add those recipe components to their plan. Uses Bootstrap and the Food2Fork API. % - Live at [GitHub Pages](https://giagnus64.github.io/Bill-Splitter/) %
 
 #### Stage : First Completed Build 
  * Basic functionality is complete. Next steps: persist data to local storage OR create a database to store meal plans. 
