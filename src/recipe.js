@@ -164,7 +164,7 @@ class Recipe {
 	generateRecipeHTML(recipeArray, pageNumber){
 		let html = '';
 		for(let i = 0; i < recipeArray.length; i++){	
-			html += `<div class="col-sm-12 col-md-6 col-lg-4 p-0 m-1 card-recipe-col" data-page="${pageNumber}">
+			html += `<div class="col-md-6 col-md-4 p-0 m-1 card-recipe-col" data-page="${pageNumber}">
 		  		<div class="card card-recipe border-info">
 	  				<div class="card-body text-center">
 	    				<h5 class="card-title "><strong>${recipeArray[i].title}</strong></h5>

@@ -20,11 +20,7 @@
 		margin-bottom:5px;
 	}
 }
-.card-img-top{
-	max-height:200px;
-	max-width:300px;
-}
 .card-recipe{
-	max-height:180px;
-	max-width:300px;
+	height:100%;
 }
+ 

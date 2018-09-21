@@ -9505,7 +9505,7 @@ var Recipe = function () {
 		value: function generateRecipeHTML(recipeArray, pageNumber) {
 			var html = '';
 			for (var i = 0; i < recipeArray.length; i++) {
-				html += "<div class=\"col-sm-12 col-md-6 col-lg-4 p-0 m-1 card-recipe-col\" data-page=\"" + pageNumber + "\">\n\t\t  \t\t<div class=\"card card-recipe border-info\">\n\t  \t\t\t\t<div class=\"card-body text-center\">\n\t    \t\t\t\t<h5 class=\"card-title \"><strong>" + recipeArray[i].title + "</strong></h5>\n\t    \t\t\t\t<h6 class=\"card-subtitle mb-2\"><em>" + recipeArray[i].publisher + "</em></h6>\n\t    \t\t\t\t<a href=\"" + recipeArray[i].source_url + "\" target=\"_blank\" class=\"btn btn-warning btn-sm\">Recipe Page</a>\n\t    \t\t\t\t<a data-toggle=\"modal\" data-target=\"#add-to-day\" data-recipe-id=\"" + recipeArray[i].recipe_id + "\" class=\"btn btn-info btn-sm add-to-plan\">Add to Day</a>\n\t  \t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>";
+				html += "<div class=\"col-md-6 col-md-4 p-0 m-1 card-recipe-col\" data-page=\"" + pageNumber + "\">\n\t\t  \t\t<div class=\"card card-recipe border-info\">\n\t  \t\t\t\t<div class=\"card-body text-center\">\n\t    \t\t\t\t<h5 class=\"card-title \"><strong>" + recipeArray[i].title + "</strong></h5>\n\t    \t\t\t\t<h6 class=\"card-subtitle mb-2\"><em>" + recipeArray[i].publisher + "</em></h6>\n\t    \t\t\t\t<a href=\"" + recipeArray[i].source_url + "\" target=\"_blank\" class=\"btn btn-warning btn-sm\">Recipe Page</a>\n\t    \t\t\t\t<a data-toggle=\"modal\" data-target=\"#add-to-day\" data-recipe-id=\"" + recipeArray[i].recipe_id + "\" class=\"btn btn-info btn-sm add-to-plan\">Add to Day</a>\n\t  \t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>";
 			}
 			return html;
 		}
@@ -9646,27 +9646,19 @@ var DayCards = function () {
 	}
 
 	_createClass(DayCards, [{
-		key: "generateDayCards",
+		key: 'generateDayCards',
 		value: function generateDayCards(dateArray) {
 			var html = '';
 			dateArray.forEach(function (date) {
-				html += "<div class=\"col-md-auto p-0 card-column\">\n\t\t\t\t\t<div class=\"card border-primary card-day\">\n\t\t\t\t\t  \t<div class=\"card-body\">\n\t\t\t\t\t\t    <h5 class=\"card-title\">" + date + "</h5>\n\t\t\t\t\t\t    <h6 class=\"card-subtitle text-muted\">Breakfast</h6>\n\t\t\t\t\t\t    <p class=\"card-text breakfast-text\"><a target=\"_blank\" href=\"http://www.allrecipes.com\" class=\"recipe-link \">Avocado Toast with Eggs</a></p>\n\t\t\t\t\t\t    <h6 class=\"card-subtitle text-muted\">Lunch</h6>\n\t\t\t\t\t\t    <p class=\"card-text lunch-text\"><a class=\"recipe-link \" target=\"_blank\">Chicken Cutlet with Broccoli Rabe</a></p><h6 class=\"card-subtitle text-muted\">Dinner</h6>\n\t\t\t\t\t\t    <p class=\"card-text dinner-text\"><a class=\"recipe-link\" target=\"_blank\">Recipe Title</a></p>\n\t\t\t\t\t\t    \t<button class=\"card-link btn btn-outline-primary card-day-edit\">Edit</button>\n\t\t\t\t\t \t </div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>";
+				html += '<div class="col-md-auto p-0 card-column">\n\t\t\t\t\t<div class="card border-primary card-day">\n\t\t\t\t\t  \t<div class="card-body">\n\t\t\t\t\t\t    <h5 class="card-title">' + date + '</h5>\n\t\t\t\t\t\t    <h6 class="card-subtitle text-muted">Breakfast</h6>\n\t\t\t\t\t\t    <p class="card-text"><a target="_blank" href="http://www.allrecipes.com" class="recipe-link ">Avocado Toast with Eggs</a></p>\n\t\t\t\t\t\t    <h6 class="card-subtitle text-muted">Lunch</h6>\n\t\t\t\t\t\t    <p class="card-text"><a class="recipe-link " target="_blank">Chicken Cutlet with Broccoli Rabe</a></p><h6 class="card-subtitle text-muted">Dinner</h6>\n\t\t\t\t\t\t    <p class="card-text"><a class="recipe-link" target="_blank">Recipe Title</a></p>\n\t\t\t\t\t\t    \t<button class="card-link btn btn-outline-primary card-day-edit">Edit</button>\n\t\t\t\t\t \t </div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>';
 			});
 			this.dayCardContainer.innerHTML = html;
 		}
-	}, {
-		key: "addMealForms",
-		value: function addMealForms(mealList) {
-			//iterate through meals on card and add forms in place
-			// use of ternary operator to check if recipe link has an href, and if not pushes string 'recipe link' in place
-			mealList.forEach(function (meal) {
-				meal.innerHTML = "<form>\n\t\t\t\t\t\t <input type=\"text\" class=\"form-control form-control-sm input-meal mb-1\" value=\"" + meal.children[0].innerText + "\">\n\t\t\t\t\t\t <input type=\"text\" class=\"form-control form-control-sm input-link mb-1\" value=\"" + (meal.children[0].getAttribute("href") ? meal.children[0].getAttribute("href") : 'Recipe Link') + "\"></form>";
-			});
-		}
+
 		//gets the meal selected by the modal
 
 	}, {
-		key: "getMeal",
+		key: 'getMeal',
 		value: function getMeal() {
 			var modalDate = document.querySelector('#day-select').value;
 			var modalMeal = document.querySelector('#meal-select').value;
@@ -9680,7 +9672,7 @@ var DayCards = function () {
 		//gets matching item for innerText of element list
 
 	}, {
-		key: "matchItemInList",
+		key: 'matchItemInList',
 		value: function matchItemInList(list, match) {
 			var matchingItem = void 0;
 			list.forEach(function (item) {
@@ -9694,20 +9686,35 @@ var DayCards = function () {
 		//adds recipe to day card
 
 	}, {
-		key: "addRecipeToMeal",
+		key: 'addRecipeToMeal',
 		value: function addRecipeToMeal(mealToEdit, recipeData) {
 			var mealText = mealToEdit.nextElementSibling;
 			var html = mealText.innerHTML;
-			html += "<a target=\"_blank\" href=\"" + recipeData.source_url + "\"  class=\"recipe-link\">" + recipeData.title + "</a>";
+			html += '<a target="_blank" href="' + recipeData.source_url + '"  class="recipe-link">' + recipeData.title + '</a>';
 			mealText.innerHTML = html;
 			return true;
+		}
+	}, {
+		key: 'addMealForms',
+		value: function addMealForms(meal) {
+			//get list of recipes(links) under meal
+			var linkArray = Array.from(meal.children);
+			var html = '';
+			//iterate through recipes on card and add forms in place
+			// use of ternary operator to check if recipe link has an href, and if not pushes string 'recipe link' in place
+			linkArray.forEach(function (link) {
+				html += '<form>\n\t\t\t\t\t\t <input type="text" class="form-control form-control-sm input-meal mb-1" value="' + link.innerText + '">\n\t\t\t\t\t\t <input type="text" class="form-control form-control-sm input-link mb-1" value="' + (link.getAttribute("href") ? link.getAttribute("href") : 'Recipe Link') + '"></form>';
+			});
+			meal.innerHTML = html;
 		}
 
 		//converts day card to edit state
 
 	}, {
-		key: "editState",
+		key: 'editState',
 		value: function editState(e) {
+			var _this = this;
+
 			var card = e.target.parentElement;
 			var mealList = card.querySelectorAll(".card-text");
 			var otherButtons = document.querySelectorAll('.card-day-edit');
@@ -9717,7 +9724,9 @@ var DayCards = function () {
 				button.disabled = true;
 			});
 			//target and change card text that will be edited
-			this.addMealForms(mealList);
+			mealList.forEach(function (meal) {
+				_this.addMealForms(meal);
+			});
 			this.addItemBtns(mealList);
 			//Change edit button to "save" and change classes for event listeners
 			var editButton = e.target;
@@ -9730,7 +9739,7 @@ var DayCards = function () {
 		// adds an add item button to each meal on a card for multiple recipe entries during a meal
 
 	}, {
-		key: "addItemBtns",
+		key: 'addItemBtns',
 		value: function addItemBtns(mealList) {
 			mealList.forEach(function (meal) {
 				var button = document.createElement('button');
@@ -9743,19 +9752,19 @@ var DayCards = function () {
 		//adds form for a new item
 
 	}, {
-		key: "addForm",
+		key: 'addForm',
 		value: function addForm(e) {
 			var newForm = document.createElement('form');
-			newForm.innerHTML = "<input type=\"text\" class=\"form-control form-control-sm input-meal mb-1\" value=\"Recipe Title\">\n\t\t  <input type=\"text\" class=\"form-control form-control-sm input-link mb-1\" value=\"Recipe Link\">";
+			newForm.innerHTML = '<input type="text" class="form-control form-control-sm input-meal mb-1" value="Recipe Title">\n\t\t  <input type="text" class="form-control form-control-sm input-link mb-1" value="Recipe Link">';
 			var button = e.target;
 			button.insertAdjacentElement('beforebegin', newForm);
 		}
 		//saves edits on day card
 
 	}, {
-		key: "saveEdits",
+		key: 'saveEdits',
 		value: function saveEdits(e) {
-			var _this = this;
+			var _this2 = this;
 
 			//target necessary card elements
 			var card = e.target.parentElement;
@@ -9770,7 +9779,7 @@ var DayCards = function () {
 			}
 			//convert forms back to meals
 			mealList.forEach(function (meal) {
-				_this.convertMealForms(meal);
+				_this2.convertMealForms(meal);
 			});
 			//re-enable other edits buttons and change styles accordingly
 			var otherButtons = document.querySelectorAll('.card-day-edit');
@@ -9788,28 +9797,28 @@ var DayCards = function () {
 		//converts forms in edit state back to meals
 
 	}, {
-		key: "convertMealForms",
+		key: 'convertMealForms',
 		value: function convertMealForms(meal) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var html = '';
-			var href = void 0;
 			//for each form in a meal
 			var mealChildren = meal.querySelectorAll('form');
 			mealChildren.forEach(function (form) {
-				console.log(form);
-				// urls
-				if (_this2.is_url(form.children[1].value)) {
-					href = form.children[1].value;
+				var href = void 0;
+				if (form.children[0].value !== '') {
+					// check for url or string 'Recipe Link'
+					if (_this3.is_url(form.children[1].value) && form.children[1] !== 'Recipe Link') {
+						href = form.children[1].value;
+					}
+					//append href to link
+					if (href) {
+						html += '<a target="_blank" href="' + href + '"  class="recipe-link">' + form.children[0].value + '</a>';
+						//otherwise leave href out
+					} else {
+						html += '<a target="_blank" class="recipe-link">' + form.children[0].value + '</a>';
+					}
 				}
-				//append href to link
-				if (href) {
-					html += "<a target=\"_blank\" href=\"" + href + "\"  class=\"recipe-link\">" + form.children[0].value + "</a>";
-					//otherwise leave href out
-				} else {
-					html += "<a target=\"_blank\" class=\"recipe-link\">" + form.children[0].value + "</a>";
-				}
-				html += '';
 			});
 			meal.innerHTML = html;
 		}
@@ -9818,7 +9827,7 @@ var DayCards = function () {
 		//taken from https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-9.php
 
 	}, {
-		key: "is_url",
+		key: 'is_url',
 		value: function is_url(str) {
 			var regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
 			if (regexp.test(str)) {
@@ -9828,7 +9837,7 @@ var DayCards = function () {
 			}
 		}
 	}, {
-		key: "linkError",
+		key: 'linkError',
 		value: function linkError(link) {
 			//creates and adds a new div with a new textNode and inserts it under the link element
 			var div = document.createElement('div');
@@ -9844,17 +9853,17 @@ var DayCards = function () {
 			return 0;
 		}
 	}, {
-		key: "validateURLs",
+		key: 'validateURLs',
 		value: function validateURLs(linkArray) {
-			var _this3 = this;
+			var _this4 = this;
 
 			//validatesURL's entered and throws error if not valid	
 			var linksValid = true;
 			linkArray.forEach(function (link) {
 				if (link.value !== '' && link.value !== 'Recipe Link') {
-					if (!_this3.is_url(link.value)) {
+					if (!_this4.is_url(link.value)) {
 						link.classList.add("is-invalid");
-						_this3.linkError(link);
+						_this4.linkError(link);
 						linksValid = false;
 						return false;
 					} else {

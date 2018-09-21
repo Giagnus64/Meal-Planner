@@ -11,10 +11,10 @@ class DayCards{
 					  	<div class="card-body">
 						    <h5 class="card-title">${date}</h5>
 						    <h6 class="card-subtitle text-muted">Breakfast</h6>
-						    <p class="card-text breakfast-text"><a target="_blank" href="http://www.allrecipes.com" class="recipe-link ">Avocado Toast with Eggs</a></p>
+						    <p class="card-text"><a target="_blank" href="http://www.allrecipes.com" class="recipe-link ">Avocado Toast with Eggs</a></p>
 						    <h6 class="card-subtitle text-muted">Lunch</h6>
-						    <p class="card-text lunch-text"><a class="recipe-link " target="_blank">Chicken Cutlet with Broccoli Rabe</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
-						    <p class="card-text dinner-text"><a class="recipe-link" target="_blank">Recipe Title</a></p>
+						    <p class="card-text"><a class="recipe-link " target="_blank">Chicken Cutlet with Broccoli Rabe</a></p><h6 class="card-subtitle text-muted">Dinner</h6>
+						    <p class="card-text"><a class="recipe-link" target="_blank">Recipe Title</a></p>
 						    	<button class="card-link btn btn-outline-primary card-day-edit">Edit</button>
 					 	 </div>
 					</div>
@@ -22,16 +22,7 @@ class DayCards{
 		});
 		this.dayCardContainer.innerHTML = html;
 	}
-	addMealForms(mealList){
-		//iterate through meals on card and add forms in place
-		// use of ternary operator to check if recipe link has an href, and if not pushes string 'recipe link' in place
-		mealList.forEach(meal =>{
-			meal.innerHTML = `<form>
-						 <input type="text" class="form-control form-control-sm input-meal mb-1" value="${meal.children[0].innerText}">
-						 <input type="text" class="form-control form-control-sm input-link mb-1" value="${(meal.children[0].getAttribute("href"))?(meal.children[0].getAttribute("href")): 'Recipe Link'}"></form>`;
-		});
-
-	}
+	
 	//gets the meal selected by the modal
 	getMeal(){
 		 const modalDate = document.querySelector('#day-select').value;
@@ -64,6 +55,21 @@ class DayCards{
 		return true;
 	}
 
+	addMealForms(meal){
+		//get list of recipes(links) under meal
+		const linkArray = Array.from(meal.children);
+		let html = '';
+		//iterate through recipes on card and add forms in place
+		// use of ternary operator to check if recipe link has an href, and if not pushes string 'recipe link' in place
+		linkArray.forEach(link =>{
+			html += `<form>
+						 <input type="text" class="form-control form-control-sm input-meal mb-1" value="${link.innerText}">
+						 <input type="text" class="form-control form-control-sm input-link mb-1" value="${(link.getAttribute("href"))?(link.getAttribute("href")): 'Recipe Link'}"></form>`;
+		});
+		meal.innerHTML = html;
+
+	}
+
 	//converts day card to edit state
 	editState(e){
 		const card = e.target.parentElement;
@@ -75,7 +81,9 @@ class DayCards{
 			button.disabled = true;
 		});		
 		//target and change card text that will be edited
-		this.addMealForms(mealList);
+		mealList.forEach(meal =>{
+			this.addMealForms(meal);
+		});
 		this.addItemBtns(mealList);
 		//Change edit button to "save" and change classes for event listeners
 		const editButton = e.target;
@@ -137,24 +145,23 @@ class DayCards{
 	//converts forms in edit state back to meals
 	convertMealForms(meal){
 		let html = '';
-		let href;
 		//for each form in a meal
 		const mealChildren = meal.querySelectorAll('form');
 		mealChildren.forEach(form =>{
-			console.log(form);
-			// urls
-			if(this.is_url(form.children[1].value)){
-				href = form.children[1].value;
-			}
-			//append href to link
-			if(href){
-			html += `<a target="_blank" href="${href}"  class="recipe-link">${form.children[0].value}</a>`;
-			//otherwise leave href out
-			} else{
-				html += `<a target="_blank" class="recipe-link">${form.children[0].value}</a>`;
-			}
-			html += '';
-				
+			let href;
+			if(form.children[0].value !== ''){
+				// check for url or string 'Recipe Link'
+				if(this.is_url(form.children[1].value) && form.children[1] !== 'Recipe Link'){
+					href = form.children[1].value;
+				}
+				//append href to link
+				if(href){
+				html += `<a target="_blank" href="${href}"  class="recipe-link">${form.children[0].value}</a>`;
+				//otherwise leave href out
+				} else{
+					html += `<a target="_blank" class="recipe-link">${form.children[0].value}</a>`;
+				}
+			}		
 		});
 		meal.innerHTML = html;
 	}
