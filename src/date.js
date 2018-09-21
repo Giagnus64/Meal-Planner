@@ -1,14 +1,25 @@
 class DateCalc{
 	constructor(){
+		this.date = document.querySelector(".date-input");
+		this.modalSelect = document.querySelector("#day-select");
 
 	}
-
+	// adds dates as choices in modal when adding searched recipes
+	changeModalDates(dateArray){
+		let html = '';
+		dateArray.forEach(date =>{
+			html += `<option>${date}</option>`;
+			this.modalSelect.innerHTML = html;
+		})
+	}
  	getDateInput(){
-		let date = document.querySelector(".date-input");
+		this.date = document.querySelector(".date-input");
 		//Check if date is empty(HTML verifies by returning empty string for false dates)
-		if(date.value !== ''){
+		if(this.date.value !== ''){
+			//checks for error message and removes it
+			this.removeError();
 			// split input into array
-			let dateArray = date.value.split("-");
+			let dateArray = this.date.value.split("-");
 			//make a new date object
 			let startDate = new Date();
 			//set month (adding 1 due to month array starting at 0)
@@ -17,7 +28,7 @@ class DateCalc{
 			let userDate = this.getWeekArray(startDate);
 			return userDate;
 		} else{
-			this.dateError(date);
+			this.dateError();
 			return false;
 		}
 		// test
@@ -46,17 +57,23 @@ class DateCalc{
 		}
 		return dateArray;
 	}
+	//removesError if it exists
+	removeError(){
+		if(this.date.nextSibling.nextSibling){
+			this.date.nextSibling.nextSibling.parentElement.removeChild(this.date.nextSibling.nextSibling);
+		}
+	}
 
-	dateError(date){
+	dateError(){
 		//creates and adds a new div with a new textNode and inserts it under the date input
 		const div = document.createElement('div');
 		const text = document.createTextNode('Please enter a valid date.');
 		div.appendChild(text);
-		date.classList.add("is-invalid");
+		this.date.classList.add("is-invalid");
 		div.classList.add("invalid-feedback");
 		//checks for error message and replaces it
-		console.log(date.parentElement.children);
-		date.parentElement.appendChild(div);		
+		this.removeError();
+		this.date.parentElement.appendChild(div);		
 	}
 }
 

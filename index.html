@@ -26,10 +26,65 @@
 	  				</div>
 	  			</div>	
 	  		</form>
-    			<!--<button class="nav-item btn btn-secondary reset-all ">Reset All</button>-->
 	  	</div>
 	  </div>
 	</nav>
+	<!-- Modal -->
+	<div class="modal fade" id="add-to-day" tabindex="-1" role="dialog" aria-labelledby="Add Recipe" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="modal-title">Add Recipe</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      <form>
+			  <div class="form-group row">
+			    <label for="day-select" class="col-sm-2 col-form-label">Day</label>
+			    <div class="col-sm-10">
+			      <div class="form-group">
+       				<select class="form-control" id="day-select">
+      				  <option>9/14</option>
+				      <option>9/15</option>
+				      <option>9/16</option>
+				    </select>
+				  </div>
+			    </div>
+			  </div>
+			  <div class="form-group row">
+			    <label for="meal-select" class="col-sm-2 col-form-label">Meal</label>
+			    <div class="col-sm-10">
+			      <div class="form-group">
+       				<select class="form-control" id="meal-select">
+      				  <option>Breakfast</option>
+				      <option>Lunch</option>
+				      <option>Dinner</option>
+				    </select>
+				  </div>
+			    </div>
+			  </div>
+			  <div class="form-group row">
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input class="form-check-input" type="checkbox" id="add-ingredients">
+			        <label class="form-check-label" for="add-ingredients">
+			          Add Ingredients to Shopping List
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+		  </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+	        <button type="button" data-toggle="modal" data-target="#add-to-day" class="btn btn-primary" id="add-recipe-modal">Add Recipe</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!--End Modal-->
 	<div class="flex-body d-flex">
 		<div class="container d-flex flex-wrap justify-content-center card-container-all">
 			<div class="row card-recipe-container mt-3 mb-3 justify-content-center">
@@ -38,75 +93,14 @@
 						<h2 class="recipe-search-title text-center">Search For Recipes</h2>
 		   				 <label class="text-center" for="search-input">Enter ingredients separated by commas, or the name of a dish</label>
 		    			<textarea class="form-control" id="search-input" rows="1"></textarea>
-		    			<button type="submit" class="btn btn-info mx-auto mt-3 search-recipe-submit">Search</button>
+		    			<button type="button" class="btn btn-info mx-auto mt-3 search-recipe-submit">Search</button>
 	  				</div>
 	  			</form>
-	  		<!--
-	  		<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Vegetables</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: All Recipes</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-			<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Vegetables And Potatoes</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: All Recipes Whats up</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-			<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Okra</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: 101 Chef</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-			<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Vegetables</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: All Recipes</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-			<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Vegetables</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: All Recipes</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-			<div class="col-md-auto p-0 m-2">
-		  		<div class="card card-recipe border-info">
-	  				<div class="card-body text-center">
-	    				<h5 class="card-title ">Grilled Vegetables</h5>
-	    				<h6 class="card-subtitle mb-2">Published by: All Recipes</h6>
-	    				<a href="#" class="btn btn-warning btn-sm">Recipe Page</a>
-	    				<a href="#" class="btn btn-info btn-sm">Add Recipe</a>
-	  				</div>
-				</div>
-			</div>
-					-->
-			</div>
-			<!-- Days -->
-			<div class="row justify-content-center align-content-center card-day-container">
-			</div> 
+		</div>
+			
+		<!-- Days -->
+		<div class="row justify-content-center align-content-center card-day-container">
+		</div> 
 		</div>
 		<div class="container justify-content-center shopping-list">
 			<h3 class="list-title text-center">Shopping List</h3>
@@ -119,11 +113,9 @@
 				<div class="row justify-content-center mt-2">
 						<button type="button" class="btn btn-primary mr-3 add-shopping-list">Add Items</button>
 						<button type="button" class="btn btn-secondary clear-shopping-list">Clear List</button>
-					</div>
+				</div>
 		</div>
 	</div>
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
