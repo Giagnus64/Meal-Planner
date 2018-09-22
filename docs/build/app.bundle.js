@@ -9078,8 +9078,13 @@ function recipeCardButtons(e) {
 	if (e.target.classList.contains("search-recipe-submit")) {
 		var input = e.target.parentElement.querySelector('textarea');
 		if (input.value !== '') {
+			//remove input error
 			_recipe.recipe.removeError(input);
+			//remove any alerts
+			_recipe.recipe.removeAlert();
+			//show loading icon
 			_recipe.recipe.showLoading();
+			//search recipes
 			searchRecipes(input.value);
 		} else {
 			_recipe.recipe.inputError(input);
@@ -9099,6 +9104,8 @@ function recipeNavButtons(e) {
 		_recipe.recipe.changePage("next");
 	}
 	if (e.target.classList.contains("new-search")) {
+		//remove any alerts on page
+		_recipe.recipe.removeAlert();
 		_recipe.recipe.recipeSearchState(e);
 		window.scroll({
 			top: 0,
@@ -9122,11 +9129,15 @@ function searchRecipes(input) {
 	}).catch(function (err) {
 		//Show error message
 		_recipe.recipe.searchError('Something went wrong with the search. Please try again.');
+		_recipe.recipe.recipeSearchState();
 		console.log(err);
 	});
 }
 
 function addRecipeToDay(e) {
+	//remove any alerts on page
+	_recipe.recipe.removeAlert();
+	// checks if ingredients are needed
 	var modalCheckbox = document.querySelector('#add-ingredients');
 	//gets data from modal to pass in
 	var recipeData = {
@@ -9137,19 +9148,25 @@ function addRecipeToDay(e) {
 	var mealToEdit = _dayCards.dayCards.getMeal();
 	//checks if ingredients are needed - starts a new get request
 	if (modalCheckbox.checked) {
+		_recipe.recipe.loadingIngredients();
 		getRecipeIngredients(e.target.dataset.recipeId, mealToEdit);
 	} else {
 		//add recipe to meal without the need of a new get request
 		_dayCards.dayCards.addRecipeToMeal(mealToEdit, recipeData);
+		_recipe.recipe.recipeAddSuccess();
 	}
 }
 //uses get request to get ingredient info on recipe
 function getRecipeIngredients(recipeID, mealToEdit) {
-	_recipe.recipe.searchRecipesByID(recipeID).then(function (recipe) {
+	_recipe.recipe.searchRecipesByID(recipeID).then(function (results) {
+		//remove any alerts
+		_recipe.recipe.removeAlert();
 		//pass response into dayCards to get input
-		_dayCards.dayCards.addRecipeToMeal(mealToEdit, recipe);
+		_dayCards.dayCards.addRecipeToMeal(mealToEdit, results);
 		// pass items into shopping list
-		_shoppingList.shoppingList.addItems(recipe.ingredients);
+		_shoppingList.shoppingList.addItems(results.ingredients);
+		//show success alert
+		_recipe.recipe.recipeAddSuccess();
 	}).catch(function (err) {
 		_recipe.recipe.searchError('Something went wrong when getting the ingredients. Please try again.');
 		console.log(err);
@@ -9209,80 +9226,72 @@ function shoppingListAdd() {
 
 //*** End Shopping List***
 
-/*//API/Recipe-Box Testing
-const recipeArray = [
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-},
-{
-f2f_url:"http://food2fork.com/view/35169",
-image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
-publisher:"Closet Cooking",
-publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
-social_rank:100,
-source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
-title:"Buffalo Chicken Chowder"
-}
-];
-recipe.displayRecipes(recipeArray);*/
+//API/Recipe-Box Testing
+var recipeArray = [{
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35wdr",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}, {
+	f2f_url: "http://food2fork.com/view/35169",
+	image_url: "http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
+	publisher: "Closet Cooking",
+	publisher_url: "http://closetcooking.com",
+	recipe_id: "35169",
+	social_rank: 100,
+	source_url: "http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
+	title: "Buffalo Chicken Chowder"
+}];
+_recipe.recipe.displayRecipes(recipeArray);
 
 /***/ }),
 /* 329 */
@@ -9306,14 +9315,16 @@ var Recipe = function () {
 		_classCallCheck(this, Recipe);
 
 		this.APIkey = "5f71f01a77a1fab1f3ff3a9eeb61fc10";
-		//testing API search
-		//this.search = "shredded chicken, mint";
 		this.recipeBox = document.querySelector(".card-recipe-container");
 		this.flexContainer = document.querySelector(".card-container-all");
 		this.dayCards = document.querySelector(".card-day-container");
 		this.modalTitle = document.querySelector("#modal-title");
 		this.modalButton = document.querySelector("#add-recipe-modal");
 		this.modal = document.querySelector('.modal');
+		//cors input for testing
+		//this.cors = 'https://cors-anywhere.herokuapp.com/';
+		//testing API search
+		//this.search = "shredded chicken, mint";
 	}
 	//Get request
 
@@ -9356,7 +9367,7 @@ var Recipe = function () {
 	}, {
 		key: "searchRecipesByTerm",
 		value: function searchRecipesByTerm(input) {
-			return this.get("https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=" + this.APIkey + "&q=" + input).then(function (results) {
+			return this.get("http://food2fork.com/api/search?key=" + this.APIkey + "&q=" + input).then(function (results) {
 				//gives an object with count and recipe array
 				return results;
 			}).catch(function (err) {
@@ -9366,9 +9377,14 @@ var Recipe = function () {
 	}, {
 		key: "searchRecipesByID",
 		value: function searchRecipesByID(recipeID) {
-			return this.get("https://cors-anywhere.herokuapp.com/http://food2fork.com/api/get?key=" + this.APIkey + "&rId=" + recipeID).then(function (results) {
+			var _this = this;
+
+			return this.get("http://food2fork.com/api/get?key=" + this.APIkey + "&rId=" + recipeID).then(function (results) {
 				return results.recipe;
 			}).catch(function (err) {
+				_this.removeAlert();
+				_this.searchError('There was an error getting the recipe. Please try again.');
+				//put in error about getting ingredients
 				console.log(err);
 			});
 		}
@@ -9558,6 +9574,40 @@ var Recipe = function () {
 			//add alert to DOM
 			this.recipeBox.insertAdjacentElement('beforeBegin', div);
 		}
+		//removes current Alert from the page
+
+	}, {
+		key: "removeAlert",
+		value: function removeAlert() {
+			var alert = document.querySelector('.alert');
+
+			console.log(alert);
+			if (alert) {
+				alert.parentElement.removeChild(alert);
+			}
+		}
+	}, {
+		key: "loadingIngredients",
+		value: function loadingIngredients() {
+			//create alert element
+			var div = document.createElement('div');
+			//give message
+			div.innerHTML = "Getting ingredients...";
+			div.classList.add('alert', 'alert-info');
+			div.setAttribute('role', 'alert');
+			//add alert to DOM
+			this.recipeBox.insertAdjacentElement('beforeBegin', div);
+		}
+	}, {
+		key: "recipeAddSuccess",
+		value: function recipeAddSuccess() {
+			var div = document.createElement('div');
+			div.innerHTML = "Recipe Added!<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
+			div.classList.add('alert', 'alert-success', 'alert-dissmissable');
+			div.setAttribute('role', 'alert');
+			this.recipeBox.insertAdjacentElement('beforeBegin', div);
+		}
+
 		//shows loading gif while waiting for get request response
 
 	}, {

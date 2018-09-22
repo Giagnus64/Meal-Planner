@@ -1,14 +1,16 @@
 class Recipe {
 	constructor(){
 		this.APIkey = "5f71f01a77a1fab1f3ff3a9eeb61fc10";
-		//testing API search
-		//this.search = "shredded chicken, mint";
 		this.recipeBox = document.querySelector(".card-recipe-container");
 		this.flexContainer = document.querySelector(".card-container-all");
 		this.dayCards = document.querySelector(".card-day-container");
 		this.modalTitle = document.querySelector("#modal-title");
 		this.modalButton = document.querySelector("#add-recipe-modal");
 		this.modal = document.querySelector('.modal');
+		//cors input for testing
+		//this.cors = 'https://cors-anywhere.herokuapp.com/';
+		//testing API search
+		//this.search = "shredded chicken, mint";
 	}
 	//Get request
 	async get(url){
@@ -18,20 +20,24 @@ class Recipe {
 	}
 
 	searchRecipesByTerm(input){
-		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
+		return this.get(`http://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
 		.then(results => {
 			//gives an object with count and recipe array
 			return results;	
 		})
-		.catch(err =>console.log(err));
+		.catch(err => console.log(err));
+		
 	}
 
 	searchRecipesByID(recipeID){
-		return this.get(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/get?key=${this.APIkey}&rId=${recipeID}`)
-			.then(results =>{
+		return this.get(`http://food2fork.com/api/get?key=${this.APIkey}&rId=${recipeID}`)
+			.then(results => {
 				return results.recipe;
 			})
 			.catch(err => {
+				this.removeAlert();
+				this.searchError('There was an error getting the recipe. Please try again.')
+				//put in error about getting ingredients
 				console.log(err);
 			});
 	}
@@ -208,6 +214,36 @@ class Recipe {
 		//add alert to DOM
 		this.recipeBox.insertAdjacentElement('beforeBegin', div);
 	}
+	//removes current Alert from the page
+	removeAlert(){
+		const alert = document.querySelector('.alert');
+
+		console.log(alert);
+		if(alert){
+			alert.parentElement.removeChild(alert);
+		}
+		
+	}
+
+	loadingIngredients(){
+		//create alert element
+		const div = document.createElement('div');
+		//give message
+		div.innerHTML = `Getting ingredients...`;
+		div.classList.add('alert', 'alert-info');
+		div.setAttribute('role','alert');
+		//add alert to DOM
+		this.recipeBox.insertAdjacentElement('beforeBegin', div);
+	}
+
+	recipeAddSuccess(){
+		const div = document.createElement('div');
+		div.innerHTML = `Recipe Added!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+		div.classList.add('alert', 'alert-success', 'alert-dissmissable');
+		div.setAttribute('role', 'alert');
+		this.recipeBox.insertAdjacentElement('beforeBegin', div);
+	}
+
 	//shows loading gif while waiting for get request response
 	showLoading(){
 		this.recipeBox.innerHTML = `<div class="lds-css ng-scope">

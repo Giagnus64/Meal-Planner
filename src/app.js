@@ -28,8 +28,13 @@ function recipeCardButtons(e){
 	if(e.target.classList.contains("search-recipe-submit")){
 		const input = e.target.parentElement.querySelector('textarea');
 		if(input.value !== ''){
+			//remove input error
 			recipe.removeError(input);
+			//remove any alerts
+			recipe.removeAlert();
+			//show loading icon
 			recipe.showLoading();
+			//search recipes
 			searchRecipes(input.value);	
 		} else{
 			recipe.inputError(input);
@@ -50,6 +55,8 @@ function recipeNavButtons(e){
 		recipe.changePage("next");
 	}
 	if(e.target.classList.contains("new-search")){
+		//remove any alerts on page
+		recipe.removeAlert();
 		recipe.recipeSearchState(e);
 		window.scroll({
   		  top: 0,
@@ -76,11 +83,15 @@ function searchRecipes(input){
 		.catch(err =>{
 			//Show error message
 			recipe.searchError('Something went wrong with the search. Please try again.')
+			recipe.recipeSearchState();
 			console.log(err);
 		});
 }
 
 function addRecipeToDay(e){
+	//remove any alerts on page
+	recipe.removeAlert();
+	// checks if ingredients are needed
 	const modalCheckbox = document.querySelector('#add-ingredients');
 	//gets data from modal to pass in
 	const recipeData = {
@@ -91,20 +102,26 @@ function addRecipeToDay(e){
 	let mealToEdit = dayCards.getMeal();
 	//checks if ingredients are needed - starts a new get request
 	if(modalCheckbox.checked){
+		recipe.loadingIngredients();
 		getRecipeIngredients(e.target.dataset.recipeId, mealToEdit);
 	} else {
 		//add recipe to meal without the need of a new get request
 		dayCards.addRecipeToMeal(mealToEdit, recipeData);
+		recipe.recipeAddSuccess();
 	}
 }
 //uses get request to get ingredient info on recipe
 function getRecipeIngredients(recipeID, mealToEdit){
 	recipe.searchRecipesByID(recipeID)
-		.then(recipe =>{
+		.then(results =>{
+			//remove any alerts
+			recipe.removeAlert();
 			//pass response into dayCards to get input
-			dayCards.addRecipeToMeal(mealToEdit, recipe);
+			dayCards.addRecipeToMeal(mealToEdit, results);
 			// pass items into shopping list
-			shoppingList.addItems(recipe.ingredients);
+			shoppingList.addItems(results.ingredients);
+			//show success alert
+			recipe.recipeAddSuccess();
 		})
 		.catch(err =>{
 			recipe.searchError('Something went wrong when getting the ingredients. Please try again.');
@@ -167,14 +184,14 @@ function shoppingListAdd(){
 
 //*** End Shopping List***
 
-/*//API/Recipe-Box Testing
+//API/Recipe-Box Testing
 const recipeArray = [
 {
 f2f_url:"http://food2fork.com/view/35169",
 image_url:"http://static.food2fork.com/Buffalo2BChicken2BChowder2B5002B0075c131caa8.jpg",
 publisher:"Closet Cooking",
 publisher_url:"http://closetcooking.com",
-recipe_id:"35169",
+recipe_id:"35wdr",
 social_rank:100,
 source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
 title:"Buffalo Chicken Chowder"
@@ -240,6 +257,6 @@ source_url:"http://www.closetcooking.com/2011/11/buffalo-chicken-chowder.html",
 title:"Buffalo Chicken Chowder"
 }
 ];
-recipe.displayRecipes(recipeArray);*/
+recipe.displayRecipes(recipeArray);
 
 
