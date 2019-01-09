@@ -9,8 +9,8 @@
     "start": "webpack-dev-server --output-public-path=/build/",
     "postcss": "postcss assets/styles/main.css --dir build/styles -w",
     "browsersync": "browser-sync -w",
-    "copy-build": "cp -R build docs",
-    "copy-html": "cp index.html docs",
+    "copy-build": "cp -vr build docs",
+    "copy-html": "cp index.html /docs",
     "copy-all": "npm run copy-build && npm run copy-html"
   },
   "author": "Gianfranco Nuschese",
