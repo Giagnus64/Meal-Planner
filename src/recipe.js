@@ -20,7 +20,7 @@ class Recipe {
 	}
 
 	searchRecipesByTerm(input){
-		return this.get(`https://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
+		return this.get(`${this.cors}https://food2fork.com/api/search?key=${this.APIkey}&q=${input}`)
 		.then(results => {
 			//gives an object with count and recipe array
 			return results;	
@@ -30,7 +30,7 @@ class Recipe {
 	}
 
 	searchRecipesByID(recipeID){
-		return this.get(`https://food2fork.com/api/get?key=${this.APIkey}&rId=${recipeID}`)
+		return this.get(`${this.cors}https://food2fork.com/api/get?key=${this.APIkey}&rId=${recipeID}`)
 			.then(results => {
 				return results.recipe;
 			})
