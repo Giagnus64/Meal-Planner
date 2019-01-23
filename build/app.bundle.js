@@ -9322,7 +9322,7 @@ var Recipe = function () {
 		this.modalButton = document.querySelector("#add-recipe-modal");
 		this.modal = document.querySelector('.modal');
 		//cors input for testing
-		//this.cors = 'https://cors-anywhere.herokuapp.com/';
+		this.cors = 'https://cors-anywhere.herokuapp.com/';
 		//testing API search
 		//this.search = "shredded chicken, mint";
 	}
