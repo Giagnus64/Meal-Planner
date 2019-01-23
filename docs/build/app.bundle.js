@@ -9367,7 +9367,7 @@ var Recipe = function () {
 	}, {
 		key: "searchRecipesByTerm",
 		value: function searchRecipesByTerm(input) {
-			return this.get("https://food2fork.com/api/search?key=" + this.APIkey + "&q=" + input).then(function (results) {
+			return this.get(this.cors + "https://food2fork.com/api/search?key=" + this.APIkey + "&q=" + input).then(function (results) {
 				//gives an object with count and recipe array
 				return results;
 			}).catch(function (err) {
@@ -9379,7 +9379,7 @@ var Recipe = function () {
 		value: function searchRecipesByID(recipeID) {
 			var _this = this;
 
-			return this.get("https://food2fork.com/api/get?key=" + this.APIkey + "&rId=" + recipeID).then(function (results) {
+			return this.get(this.cors + "https://food2fork.com/api/get?key=" + this.APIkey + "&rId=" + recipeID).then(function (results) {
 				return results.recipe;
 			}).catch(function (err) {
 				_this.removeAlert();
